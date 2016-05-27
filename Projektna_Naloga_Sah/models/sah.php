@@ -274,14 +274,40 @@ class Sah {
 		return false;
 	}
 	public static function Pawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		if($side == -1){
-			if($row1-1 == $row2 && $col1 == $col2){
+		if($polje[$polje[$row2][$col2]] != '0'){
+			if($side == 1 && ($polje[$polje[$row2][$col2]] == 'p' || $polje[$polje[$row2][$col2]] == 'r' || $polje[$polje[$row2][$col2]] == 'n' || $polje[$polje[$row2][$col2]] == 'q' || $polje[$polje[$row2][$col2]] == 'b' || $polje[$polje[$row2][$col2]] == 'k')){ //Bela stran 
+				return false;
+			}
+			else if($side != 1 && ($polje[$polje[$row2][$col2]] == 'P' || $polje[$polje[$row2][$col2]] == 'R' || $polje[$polje[$row2][$col2]] == 'N' || $polje[$polje[$row2][$col2]] == 'Q' || $polje[$polje[$row2][$col2]] == 'B'|| $polje[$polje[$row2][$col2]] == 'K')){ //Črna stran
+				return false;
+			}
+		}
+		if($side == -1){ //Crni
+			if($row1-1 == $row2 && $col1 == $col2 && $polje[$polje[$row2][$col2]] == '0'){
+				return true;
+			}
+			else if($row1-1 == $row2 && $col1-1 == $col2 && ($polje[$polje[$row2][$col2]] == 'p' || $polje[$polje[$row2][$col2]] == 'r' || $polje[$polje[$row2][$col2]] == 'n' || $polje[$polje[$row2][$col2]] == 'q' || $polje[$polje[$row2][$col2]] == 'b' || $polje[$polje[$row2][$col2]] == 'k')){
+				return true;
+			}
+			else if($row1-1 == $row2 && $col1+1 == $col2 && ($polje[$polje[$row2][$col2]] == 'p' || $polje[$polje[$row2][$col2]] == 'r' || $polje[$polje[$row2][$col2]] == 'n' || $polje[$polje[$row2][$col2]] == 'q' || $polje[$polje[$row2][$col2]] == 'b' || $polje[$polje[$row2][$col2]] == 'k')){
+				return true;
+			}
+			else if($row1-2 == $row2 && $col1 == $col2 && $row1 == 6 && $polje[$polje[$row2][$col2]] == '0'){
 				return true;
 			}
 			return false;
 		}
-		else{
-			if($row1+1 == $row2 && $col1 == $col2){
+		else{ //Beli
+			if($row1+1 == $row2 && $col1 == $col2 && $polje[$polje[$row2][$col2]] == '0'){
+				return true;
+			}
+			else if($row1+1 == $row2 && $col1-1 == $col2 && ($polje[$polje[$row2][$col2]] == 'P' || $polje[$polje[$row2][$col2]] == 'R' || $polje[$polje[$row2][$col2]] == 'N' || $polje[$polje[$row2][$col2]] == 'Q' || $polje[$polje[$row2][$col2]] == 'B'|| $polje[$polje[$row2][$col2]] == 'K')){
+				return true;
+			}
+			else if($row1+1 == $row2 && $col1+1 == $col2 && ($polje[$polje[$row2][$col2]] == 'P' || $polje[$polje[$row2][$col2]] == 'R' || $polje[$polje[$row2][$col2]] == 'N' || $polje[$polje[$row2][$col2]] == 'Q' || $polje[$polje[$row2][$col2]] == 'B'|| $polje[$polje[$row2][$col2]] == 'K')){
+				return true;
+			}
+			else if($row1+2 == $row2 && $col1 == $col2 && $row1 == 1 && $polje[$polje[$row2][$col2]] == '0'){
 				return true;
 			}
 			return false;
