@@ -6,27 +6,12 @@
 		public $username;
 		public $ime;
 		public $priimek;
-		public $email;
-		public $telefonska_st;
-		public $ulica;
-		public $posta;
-		public $starost;
-		public $hisna_st;
-		public $st_oglasov;
 
-		public function __construct($id, $username, $ime, $priimek, $email, $telefonska_st, $ulica, $posta, $starost, $hisna_st, $spol, $st_oglasov) {
+		public function __construct($id, $username, $ime, $priimek) {
 			$this->id = $id;
 			$this->username = $username;
 			$this->ime = $ime;
 			$this->priimek = $priimek;
-			$this->email = $email;
-			$this->telefonska_st = $telefonska_st;
-			$this->ulica = $ulica;
-			$this->posta = $posta;
-			$this->starost = $starost;
-			$this->hisna_st = $hisna_st;
-			$this->spol = $spol;
-			$this->st_oglasov = $st_oglasov;
 		}
 		
 		public static function vsiUporabniki() {
@@ -36,7 +21,7 @@
 			
 			$st_oglasov = 0;
 			while($row = mysqli_fetch_assoc($result)){
-				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek'], $row['email'], $row['telefonska_stevilka'], $row['ulica'], $row['posta'], $row['starost'], $row['hisna_st'], $row['spol'], $st_oglasov);
+				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 			}
 		  // we create a list of Post objects from the database results
 			return $list;
@@ -44,57 +29,122 @@
 
 		public static function najdiUporabnika($id) {
 			$id = intval($id);
-			$list = [];
 			$db = Db::getInstance();
-			$result = mysqli_query($db,"SELECT uporabnik.*, count(oglas.TK_Uporabnik) AS st_oglasov FROM uporabnik, oglas WHERE oglas.TK_Uporabnik = \"$id\" AND uporabnik.id = \"$id\"");
+			$result = mysqli_query($db,"SELECT * FROM uporabnik WHERE uporabnik.id = \"$id\"");
 			
 			$row = mysqli_fetch_assoc($result);
-			return new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek'], $row['email'], $row['telefonska_stevilka'], $row['ulica'], $row['posta'], $row['starost'], $row['hisna_st'], $row['spol'], $row["st_oglasov"]);
+			return new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 		}
 		
-		public static function dodajUporabnika($username, $passwordH, $ime, $priimek, $email, $telefonska_st, $ulica, $posta,$spol, $starost, $hisna_st, $admin) {
+		public static function dodajUporabnika($username, $passwordH, $ime, $priimek) {
 			$password = hash("sha256", $passwordH);
 			$db = Db::getInstance();
-			$query="INSERT INTO uporabnik(uporabnisko_ime, geslo, ime, priimek, email, telefonska_stevilka, ulica, posta, spol, starost, hisna_st, admin) VALUES (\"$username\", \"$password\", \"$ime\", \"$priimek\", \"$email\", \"$telefonska_st\", \"$ulica\", \"$posta\", \"$spol\", \"$starost\", \"$hisna_st\", \"$admin\")";
+			$sql="INSERT INTO uporabnik(prijava, uporabnisko_ime, geslo, ime, priimek) VALUES (-1, \"$username\", \"$password\", \"$ime\", \"$priimek\")";
 
-			mysqli_query($db,$query);
-			$id=mysqli_insert_id($db); // gets the last id used in a query (Returns the auto generated id used in the last query)
+			mysqli_query($db,$sql);
 
 			return Uporabnik::najdiUporabnika($id);
 		}
 		
 		public static function prijaviUporabnika($username, $password){
+			echo "test1";
 			$password=hash("sha256", $_POST["password"]);
 			$db = Db::getInstance();
-			$sql = "SELECT * FROM uporabnik WHERE uporabnisko_ime=\"$username\" AND geslo=\"$password\" AND admin = 1";
+			$sql = "SELECT * FROM uporabnik WHERE uporabnisko_ime=\"$username\" AND geslo=\"$password\"";
 			$result = mysqli_query($db, $sql);
 			if (mysqli_num_rows($result) > 0) {
 				$row = mysqli_fetch_assoc($result);
 				$_SESSION["username"]=$username;
 				$_SESSION["id"] = $row["id"];
-				header("views/uporabnik/index.php?controller=uporabnik&action=index");
+				$sql="UPDATE uporabnik SET prijava = 1 WHERE id = '".$row["id"]."'";
+				mysqli_query($db, $sql);
 			}
 			else
 			{
-				header("Location: /MVC/mvc/index.php");
+				header("Location: ?controller=strani&action=domov");
 			}
 		}
 		
-		public static function spremeniUporabnika($id, $username, $ime, $priimek, $email, $telefonska_st, $ulica, $posta, $starost, $hisna_st){
+		public static function dodajPrijatelja($uporabnisko_ime){
 			$db = Db::getInstance();
-			$query="UPDATE uporabnik SET uporabnisko_ime = '$username', ime = '$ime', priimek = '$priimek', email='$email', telefonska_stevilka = '$telefonska_st', ulica = '$ulica', posta = '$posta', starost = '$starost', hisna_st = '$hisna_st' WHERE id = \"$id\"";
-			if (mysqli_query($db, $query)){
-			} 
+			$result = mysqli_query($db,"SELECT * FROM uporabnik WHERE uporabnik.uporabnisko_ime = \"$uporabnisko_ime\"");
+			$row = mysqli_fetch_assoc($result);
+			if($row > 0)
+			{
+				$sql="INSERT INTO prijatelji(id_uporabnika, id_prijatelja) VALUES (\"".$_SESSION["id"]."\", \"".$row['id']."\")";
+				mysqli_query($db, $sql);
+				header("Location: ?controller=strani&action=PrijateljObstaja");
+			}
 			else{
-				echo "Error: " . $query . "<br>" . mysqli_error($db);
+				header("Location: ?controller=strani&action=PrijateljNeobstaja");
 			}
 		}
-		
-		public static function zbrisiUporabnika($id) {
-			$id = intval($id);
+  
+		public static function izzoviPrijatelja($id_prijatelja){
 			$db = Db::getInstance();
-			$result = mysqli_query($db,"DELETE FROM uporabnik WHERE id=$id AND admin = 0");
-			mysqli_query($db,$query);
+			$sql = "INSERT INTO izziv(id_uporabnika, id_prijatelja, stanje) VALUES (\"".$_SESSION["id"]."\", \"".$id_prijatelja."\", \"w\")";
+			mysqli_query($db, $sql);
 		}
+		
+		public static function vrniIzzive(){
+			$list = [];
+			$db = Db::getInstance();
+			$result = mysqli_query($db,"SELECT * FROM izziv, uporabnik WHERE id_uporabnika = uporabnik.id AND id_prijatelja = \"".$_SESSION["id"]."\"");
+		
+			while($row = mysqli_fetch_assoc($result)){
+				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
+			}
+			return $list;
+		}
+		
+		public static function checkIzzive(){
+			/*$db = Db::getInstance();
+			$result = mysqli_query($db,"SELECT * FROM izziv, uporabnik WHERE id_uporabnika = uporabnik.id AND id_prijatelja = \"".$_SESSION["id"]."\"");
+		
+			while($row = mysqli_fetch_assoc($result)){
+				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
+			}
+			return $list;*/
+			//????????????????????????
+			
+		}
+		
+		public static function updateIzzive($novo_stanje, $id_prijatelja){
+			$db = Db::getInstance();
+			if($novo_stanje == "a"){
+				$sql="UPDATE izziv SET stanje = '$novo_stanje' WHERE id_uporabnika = $id_prijatelja AND id_prijatelja = ".$_SESSION["id"]."";
+				
+			}
+			else if($novo_stanje == "r"){
+				$sql="DELETE FROM izziv WHERE id_uporabnika = $id_prijatelja AND id_prijatelja = ".$_SESSION["id"]."";
+			}
+			
+			$result = mysqli_query($db,$sql);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
   }
 ?>

@@ -5,7 +5,7 @@
 		}
 		
 		public function shrani() {
-			$oglas = Uporabnik::dodajUporabnika($_POST["username"] ,$_POST["password"], $_POST["ime"], $_POST["priimek"], $_POST["email"], $_POST["telefonska_st"], $_POST["ulica"] , $_POST["posta"],$_POST["spol"],$_POST["starost"], $_POST["hisna_st"], 1);
+			$uporabnik = Uporabnik::dodajUporabnika($_POST["username"] ,$_POST["password"], $_POST["ime"], $_POST["priimek"]);
 			require_once('views/registracija/shrani.php');
 		}
 		
@@ -14,14 +14,17 @@
 		}
 		
 		public function prijava() {
+			echo "prijava";
 			Uporabnik::prijaviUporabnika($_POST["username"], $_POST["password"]);
-			//require_once('views/registracija/index.php');
-			header("Location: /MVC/mvc/index.php?controller=uporabnik&action=index");
+			header("Location: ?controller=uporabnik&action=profile");
 		}
 		
 		public function odjava() {
+			$db = Db::getInstance();
+			$sql="UPDATE uporabnik SET prijava = -1 WHERE id = '".$_SESSION["id"]."'";
+			mysqli_query($db, $sql);
 			session_destroy();
-			header("Location: /MVC/mvc/index.php");
+			header("Location: ?controller=strani&action=domov");
 		}
 	}
 ?>

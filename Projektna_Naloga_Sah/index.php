@@ -9,6 +9,9 @@
     $controller = 'strani';
     $action     = 'domov';
   }
-
-  require_once('views/layout.php');
+	if($controller == 'api'){
+		require_once('views/api.php');
+	}else{
+		require_once('views/layout.php');
+	}
 ?>

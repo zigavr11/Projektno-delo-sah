@@ -1,5 +1,5 @@
 <?php
-//funkcija, ki kliče kontrolerje in hkrati vključuje njihovo kodo
+//funkcija, ki klice kontrolerje in hkrati vkljucuje njihovo kodo
   function call($controller, $action) {
     require_once('controllers/' . $controller . '_controller.php');
 
@@ -15,13 +15,18 @@
 			require_once('models/uporabnik.php');
 			$controller = new UporabnikController();
 			break;
+		case 'sah':
+			require_once('models/sah.php');
+			$controller = new SahController();
+			break;
     }
     $controller->{ $action }();
   }
 
-   $controllers = array('strani' => ['domov', 'napaka'],
-					   'uporabnik' => ['index', 'prikazi','dodaj','shrani','urediHTML', 'uredi', 'profile'],
-					   'registracija' => ['index','shrani', 'prijavaHTML', 'prijava', 'odjava']);
+   $controllers = array('strani' => ['domov', 'PrijateljNeobstaja', 'PrijateljObstaja' ,'napaka'],
+					   'uporabnik' => ['index', 'prikazi','shrani', 'profile', 'dodaj_Prijatelja'],
+					   'registracija' => ['index','shrani', 'prijavaHTML', 'prijava', 'odjava'],
+					   'sah' => ['index', 'ai', 'friend', 'opponent', 'move']);
   if (array_key_exists($controller, $controllers)) {
     if (in_array($action, $controllers[$controller])) {
       call($controller, $action);

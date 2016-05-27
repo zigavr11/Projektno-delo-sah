@@ -8,20 +8,29 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script></head>
-	
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="main.js"></script>
+	</head>
 	<style>
 		.navbar {
 			margin-bottom: 0;
 			border-radius: 0;
 		}
 		
-		table td.active {
-			background: #000000;
+		table td.active1 {
+			background: #ff8000;
+		}
+		
+		table td.active2 {
+			background: #ff6666;
+		}
+		
+		.w{
+			transform: matrix(-1,0,0,-1,0,0);
 		}
 		
 		.row.content {
-			height: 600px
+			height: {height:auto;} 
 		}
 		
 		.sidenav {
@@ -60,9 +69,9 @@
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='index.php'>Domov</a></li>
+					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='?controller=strani&action=domov'>Domov</a></li>
 					<li <?php if($action=='profile') echo "class=\"active\""?>><a href='?controller=uporabnik&action=profile'>Profil</a></li>
-					<li><a href='?controller=&action='>Igra</a></li>
+					<li><a href='?controller=sah&action=index'>Igra</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 				<?php
@@ -87,19 +96,57 @@
 			<div class="col-sm-8 text-left"> 
 				<?php require_once('routes.php'); ?> 
 			</div>
+			
 			<div class="col-sm-2 sidenav">
-				<div class="well">
-					<p>Reklame</p>
+				<div class="panel panel-default">
+					<div class="panel-heading">Prijatelji</div>
+					<?php
+						if(isset($_SESSION["username"])){
+							$db = Db::getInstance();
+							$result = mysqli_query($db,"SELECT * FROM uporabnik, prijatelji WHERE uporabnik.id = id_prijatelja AND id_uporabnika = ".$_SESSION["id"]."");
+			
+							while($row = mysqli_fetch_assoc($result)){
+								echo "<div class=\"panel-body\">".$row["uporabnisko_ime"]."
+								<button type=\"button\" id=\"".$row["id"]."\" class=\"btn btn-primary btn-xs glyphicon glyphicon-play friend_play\"></button>
+								</div>";
+
+							}
+							
+							echo "<form class=\"form-inline\" method=\"post\" action=\"?controller=uporabnik&action=dodaj_Prijatelja\" >";
+							echo "<div class=\"form-group\">";
+							echo "<hr>";
+							echo "Vpisi username prijatelja:";
+							echo "<input value=\"\" type=\"text\" name=\"username\" class=\"form-control\" placeholder=\"Username\"> </input>";
+							echo "<button type=\"submit\" class=\"btn btn-primary btn-xs\">Dodaj prijatelja</button>";
+							echo "</div>";
+							echo "</form>";
+							//<span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>
+						}
+						else{
+							echo "Ce zelite dodati in igrati proti prijateljem se morate registrirate/vpisati";
+						}
+					?>					
 				</div>
-				<div class="well">
-					<p>Reklame</p>
+				<div class="panel panel-default">
+				<div class="panel-heading">Izzivi od prijateljev</div>
+				<div id="panel_izzivi" class="panel panel-default"> </div>
 				</div>
+				<hr>
+				<div class="panel panel-default">
+				<div class="panel-heading">Aktivne igre</div>
+				<div id="panel_aktivne_igre" class="panel panel-default"> </div>
+				</div>
+				<hr>
 			</div>
 		</div>
 	</div>
-
+	
+	
+	
 	<footer class="container-fluid text-center">
-	<p>Credits: Žiga Vodušek Resnik, Emilija Taseva, Žan Rojko</p>
+	<p> Ziga Vodusek Resnik, Emilija Taseva, Zan Rojko</p>
 	</footer>
 	<body>
 </html>
+
+<!-- Naredi da so username razlicni. V podatkovni bazi ne sme bit enakih usernamov. -->

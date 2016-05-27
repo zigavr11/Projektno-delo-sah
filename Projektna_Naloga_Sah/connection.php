@@ -8,8 +8,7 @@
 
     public static function getInstance() {
       if (!isset(self::$instance)) {
-       
-        self::$instance = mysqli_connect("localhost", "root", "root", "database");
+		self::$instance = mysqli_connect("localhost", "test", "test", "sah");
       }
       return self::$instance;
     }
