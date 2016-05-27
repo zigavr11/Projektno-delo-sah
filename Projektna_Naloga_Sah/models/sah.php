@@ -658,6 +658,167 @@ class Sah {
 		
 		return Sah::toFEN($sah);
 	}
+	
+	//Za pregled saha
+	public static function sahDiag1($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		$move = false;
+		$min = min($row1, $col1);
+		$tempRow = $row1;
+		$tempCol = $col1;
+		$row1 = $row1 - $min;
+		$col1 = $col1 - $min;
+		
+		for($n = 0; $n < 8; $n++){
+			$pozicija1 = $row1 * 8 + $col1;
+			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+				if($polje[$pozicija1] != $figure && $polje[$pozicija1] != "0"){
+					//echo "false";
+					return false;
+				}
+			}
+			if($row1 == $row2 && $col1 == $col2){ //Ce je poteza veljavna
+				//echo "true";
+				$move = true;
+			}
+			else if($row1 == 7 && $col1 == 7){ //Ce smo na koncu sahovnice
+				//echo "false";
+				return $move;
+			}
+			if($row1 == $tempRow && $col1 == $tempCol){ //ko pregledamo svojo pozicijo
+				$row1++;
+				$col1++;
+				//echo "continue";
+				continue;
+			}
+			$row1++;
+			$col1++;
+		}
+		return $move;
+	}
+	public static function sahDiag2($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
+		$move = false;
+		$skupno = $row1 + $col1;
+		$tempRow = $row1;
+		$tempCol = $col1;
+		if($skupno > 7){
+			$row1 = $skupno - 7;
+			$col1 = 7;
+		}
+		else{
+			$row1 = 0;
+			$col1 = $skupno;
+		}
+		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]\n";
+		for($n = 0; $n < 8; $n++){
+			$pozicija1 = $row1 * 8 + $col1;
+			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+				//echo "polje:".$polje[$pozicija1];
+				if($polje[$pozicija1] != $figure && $polje[$pozicija1] != "0"){
+					//echo "false";
+					return false;
+				}
+			}
+			if($row1 == $row2 && $col1 == $col2){
+				//echo "true";
+				$move = true;
+			}
+			else if($row1 == 7 && $col1 == 7){
+				//echo "move";
+				return $move;
+			}
+			if($row1 == $tempRow && $col1 == $tempCol){
+				$row1++;
+				$col1--;
+				//echo "continue";
+				continue;
+			}
+			$row1++;
+			$col1--;
+		}
+		return $move;
+	}
+	public static function sahVrsta($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		$move = false;
+		$tempRow = $row1;
+		$tempCol = $col1;
+		$col1 = 0;
+		for($n = 0; $n < 8; $n++){
+			//echo "col1:".$col1."min:".min($tempCol, $col2)."max:".max($tempCol, $col2)."\n";
+			$pozicija1 = $row1 * 8 + $col1;
+			if($col1 > min($tempCol, $col2) && $col1 < max($tempCol, $col2)){
+				//echo "polje:".$polje[$pozicija1];
+				if($polje[$pozicija1] != $figure && $polje[$pozicija1] != "0"){
+					//echo "false1";
+					return false;
+				}
+			}
+			if($row1 == $row2 && $col1 == $col2){
+				//echo "true";
+				$move = true;
+			}
+			else if($row1 == 7 && $col1 == 7){
+				//echo "move";
+				return $move;
+			}
+			if($row1 == $tempRow && $col1 == $tempCol){
+				//echo "continue";
+				$col1++;
+				continue;
+			}
+			$col1++;
+		}
+		return $move;
+	}
+	public static function sahStolpec($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		$move = false;
+		$tempRow = $row1;
+		$tempCol = $col1;
+		$row1 = 0;
+		for($n = 0; $n < 8; $n++){
+			$pozicija1 = $row1 * 8 + $col1;
+			if($side == 1){ //Bela stran
+				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+					if($polje[$pozicija1] != $figure && $polje[$pozicija1] != "0"){
+						//echo "false 1";
+						return false;
+					}
+				}
+			}
+			else{
+				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+					//echo $polje[$pozicija1];
+					if($polje[$pozicija1] != $figure && $polje[$pozicija1] != "0"){
+						//echo "false 2";
+						return false;
+					}
+				}
+			}
+			if($row1 == $row2 && $col1 == $col2){
+				//echo "true";
+				$move = true;
+			}
+			else if($row1 == 7 && $col1 == 7){
+				//echo "move";
+				return $move;
+			}
+			if($row1 == $tempRow && $col1 == $tempCol){
+				//echo "continue";
+				$row1++;
+				continue;
+			}
+			$row1++;
+		}
+		return $move;
+	}
+	public static function sahKnight($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		
+	}
+	public static function sahPawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		
+	}
+	
+	
   }
 ?>
 
