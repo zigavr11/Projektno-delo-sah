@@ -191,14 +191,11 @@ class Sah {
 		if(Sah::preglejStolpec($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
 	}
 	public static function Knight($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		$pozicija2 = $row2 * 8 + $col2;
 		if($polje[$row2][$col2] != '0'){
 			if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-				//echo "pozicija2 ".$side;
 				return false;
 			}
 			else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-				//echo "pozicija2 ".$side;
 				return false;
 			}
 		}
@@ -241,14 +238,11 @@ class Sah {
 		return false;
 	}
 	public static function King($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		$pozicija2 = $row2 * 8 + $col2;
 		if($polje[$row2][$col2] != '0'){
 			if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-				//echo "pozicija2 ".$side;
 				return false;
 			}
 			else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-				//echo "pozicija2 ".$side;
 				return false;
 			}
 		}
@@ -385,17 +379,6 @@ class Sah {
 			return false;
 		}
 	}
-	
-		if($polje[$row2][$col2] != '0'){
-				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-					//echo "pozicija2 ".$side;
-					return false;
-				}
-				else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-					//echo "pozicija2 ".$side;
-					return false;
-				}
-			}
 		if($side == 1){ //Bela stran
 			//echo "[".$row1.",".$col1."] - min:".min($tempRow, $row2)."max:".max($tempRow, $row2)."\n";
 				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
@@ -441,11 +424,9 @@ class Sah {
 		for($n = 0; $n < 8; $n++){
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 				else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 			}
@@ -479,7 +460,6 @@ class Sah {
 		$skupno = $row1 + $col1;
 		$tempRow = $row1;
 		$tempCol = $col1;
-		$pozicija2 = $row2 * 8 + $col2;
 		if($skupno > 7){
 			$row1 = $skupno - 7;
 			$col1 = 7;
@@ -493,11 +473,9 @@ class Sah {
 			$pozicija1 = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 				else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 			}
@@ -533,18 +511,15 @@ class Sah {
 		$tempRow = $row1;
 		$tempCol = $col1;
 		
-		$pozicija2 = $row2 * 8 + $col2; //Figura na pozicijo na katero se zelimo premaknit (lahko ni figure na tej poziciji)
 		$col1 = 0;
 		for($n = 0; $n < 8; $n++){
 			//echo "col1:".$col1."min:".min($tempCol, $col2)."max:".max($tempCol, $col2)."\n";
 			$pozicija1 = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 				else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 			}
@@ -577,16 +552,13 @@ class Sah {
 		$tempRow = $row1;
 		$tempCol = $col1;
 		$row1 = 0;
-		$pozicija2 = $row2 * 8 + $col2;
 		for($n = 0; $n < 8; $n++){
 			$pozicija1 = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 				else if($side != 1 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){ //Črna stran
-					//echo "pozicija2 ".$side;
 					return false;
 				}
 			}
