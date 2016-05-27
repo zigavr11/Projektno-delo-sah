@@ -35,7 +35,7 @@
 		
 		.sidenav {
 			padding-top: 20px;
-			background-color: #f1f1f1;
+			background-color: red;
 			height: 100%;
 		}
 
