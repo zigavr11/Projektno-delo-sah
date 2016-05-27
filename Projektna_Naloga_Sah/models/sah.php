@@ -300,6 +300,7 @@ class Sah {
 		$polje[$row2][$col2] = $figure;
 		return $polje;
 	}
+	
 	public static function updatePolje($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
 		$db = Db::getInstance();
 		$updateDB = false;
@@ -619,7 +620,6 @@ class Sah {
 	}
 	
 	
-	
 	public static function generate2DBoard($polje){
 		$sah = array
 		(
@@ -795,6 +795,104 @@ class Sah {
 		
 	}
 	
+	public static function checkForCheck($polje, $side, $figure){
+		$check = false;
+		$pos = Sah::getFriendlyKingPosition($side, $polje);
+		//Pozicije kralja
+		$k_Row = $pos[0];
+		$k_Col = $pos[1];
+		//echo "king:".$k_Row.$k_Col;
+		if($side == -1){ // Ko naredimo potezo kor crni igralec moramo pregledati vse ostale figure belega igralca ce katera naredi sah
+			for($x = 0; $x < 8; $x++){
+				for($y = 0; $y < 8; $y++){	
+					$figure = $polje[$x * 8 + $y];
+					switch($polje[$x * 8 + $y]){
+						//White player
+						case "r":
+							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ /*echo "r true";*/ $check = true; }
+							else if(Sah::sahStolpec($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+						break;
+						case "b":
+							if(Sah::sahDiag1($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag2($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+						break;
+						case "q":
+							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahStolpec($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag1($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag2($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+						break;
+					}
+				}
+				if($check)
+					break;
+			}
+		}
+		else{
+			for($x = 0; $x < 8; $x++){
+				for($y = 0; $y < 8; $y++){
+					$figure = $polje[$x * 8 + $y];
+					switch($polje[$x * 8 + $y]){
+						//Black player
+						case "R":
+							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahStolpec($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+						break;
+						case "B":
+							if(Sah::sahDiag1($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag2($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){$check = true; }
+						break;
+						case "Q":
+							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahStolpec($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag1($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+							else if(Sah::sahDiag2($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
+						break;
+					}
+				}
+				if($check)
+					break;
+			}
+		}
+		return $check;
+	}
+	public static function getKingPosition($side, $polje){
+		$pos = "";
+		for($x = 0; $x < 8; $x++){
+			for($y = 0; $y < 8; $y++){
+				if($side == -1){
+					if($polje[$x * 8 + $y] == "k"){
+						$pos = $x.$y;
+					}
+				}
+				else{
+					if($polje[$x * 8 + $y] == "K"){
+						$pos = $x.$y;
+					}
+				}
+			}
+		}
+		return $pos;
+	}
+	public static function getFriendlyKingPosition($side, $polje){
+		
+		$pos = "";
+		for($x = 0; $x < 8; $x++){
+			for($y = 0; $y < 8; $y++){
+				if($side == 1){
+					if($polje[$x * 8 + $y] == "k"){
+						$pos = $x.$y;
+					}
+				}
+				else{
+					if($polje[$x * 8 + $y] == "K"){
+						$pos = $x.$y;
+					}
+				}
+			}
+		}
+		return $pos;
+	}
 	
   }
   
