@@ -385,7 +385,6 @@ class Sah {
 		}
 	}
 	
-	public static function checkStuff(){
 		if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
 					//echo "pozicija2 ".$side;
@@ -449,22 +448,9 @@ class Sah {
 					return false;
 				}
 			}
-			if($side == 1){ //Bela stran
-			//echo "[".$row1.",".$col1."] - min:".min($tempRow, $row2)."max:".max($tempRow, $row2)."\n";
-				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					//echo "polje:".$polje[$row1][$col1];
-					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
-						//echo "false";
-						return false;
-					}
-				}
-			}
-			else{
-				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
-						//echo "false";
-						return false;
-					}
+			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
+					return false;
 				}
 			}
 			if($row1 == $row2 && $col1 == $col2){
@@ -514,22 +500,11 @@ class Sah {
 					return false;
 				}
 			}
-			if($side == 1){ //Bela stran
-			//echo "[".$row1.",".$col1."] - min:".min($tempRow, $row2)."max:".max($tempRow, $row2)."\n";
-				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					//echo "polje:".$polje[$row1][$col1];
-					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
-						//echo "false";
-						return false;
-					}
-				}
-			}
-			else{
-				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
-						//echo "false";
-						return false;
-					}
+			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
+				//echo "polje:".$polje[$row1][$col1];
+				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
+					//echo "false";
+					return false;
 				}
 			}
 			if($row1 == $row2 && $col1 == $col2){
@@ -641,8 +616,10 @@ class Sah {
 			$row1++;
 		}
 		return $move;
-	}	
-	//minimax alfa beta
+	}
+	
+	
+	
 	public static function generate2DBoard($polje){
 		$sah = array
 		(
@@ -820,5 +797,25 @@ class Sah {
 	
 	
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 ?>
 
