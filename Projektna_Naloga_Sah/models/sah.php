@@ -585,7 +585,6 @@ class Sah {
 		}
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]\n";
 		for($n = 0; $n < 8; $n++){
-			$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
 					return false;
