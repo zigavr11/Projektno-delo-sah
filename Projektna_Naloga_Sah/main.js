@@ -3,7 +3,7 @@ $(document).ready(function(){
 		var friend_id = this.id;
 		$.ajax({
 			type: "POST",
-			url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=izzoviPrijatelja",
+			url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=izzoviPrijatelja",
 			data: {"friend_id":friend_id},
 			success:function(data){
 				
@@ -20,7 +20,7 @@ $(document).ready(function(){
 		document.getElementById("panel_aktivne_igre").innerHTML = "";
 		$.ajax({
 			type: "GET",
-			url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=vrniIzzive",
+			url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=vrniIzzive",
 			success:function(data){
 				//v data so izzivi
 				var izzivi = JSON.parse(data);
@@ -49,11 +49,11 @@ $(document).ready(function(){
 				$(".accept").on("click",function(){
 					$.ajax({
 						type: "POST",
-						url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=updateIzzive",
+						url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=updateIzzive",
 						data: {"novo_stanje":"a", "friend_id": this.id},
 						success:function(data){
 							console.log(data);
-							window.location.href = "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=sah&action=friend&game_id=" + data;
+							window.location.href = "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=friend&game_id=" + data;
 						},
 						error:function(error){
 							console.log(error);
@@ -63,7 +63,7 @@ $(document).ready(function(){
 				$(".reject").on("click",function(){
 					$.ajax({
 						type: "POST",
-						url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=updateIzzive",
+						url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=updateIzzive",
 						data: {"novo_stanje":"r", "friend_id": this.id},
 						success:function(data){
 							console.log(data);
@@ -80,7 +80,7 @@ $(document).ready(function(){
 		})
 		$.ajax({
 			type: "GET",
-			url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=vrniAktivneIgre",
+			url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=vrniAktivneIgre",
 			success:function(data){
 				//v data so izzivi
 				var igre = JSON.parse(data);
@@ -103,7 +103,7 @@ $(document).ready(function(){
 				}
 				$(".join").on("click",function(){
 					var gameId = this.id;
-					window.location.href = "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=sah&action=friend&game_id=" + gameId;
+					window.location.href = "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=friend&game_id=" + gameId;
 				});
 			},
 			error:function(error){

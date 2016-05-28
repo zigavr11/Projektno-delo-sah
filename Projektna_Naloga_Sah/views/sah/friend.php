@@ -48,7 +48,7 @@ $(document).ready(function(){
 						console.log(" Row 1: " + row1 + " Col 1: " + col1 + " Row 2: " + row2 + " Col 2: " + col2 + " Figure: " + figure );
 						$.ajax({
 							type: "POST",
-							url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=move",
+							url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=move",
 							data: {"polje":sah,"row1":row1,"row2":row2,"col1":col1,"col2":col2,"figure":figure,"game_id":game_id,"poteza":poteza},
 							success:function(data){
 								if(!JSON.parse(data)){
@@ -75,7 +75,7 @@ $(document).ready(function(){
 function getBoard(){
 	$.ajax({
 		type: "POST",
-		url: "http://localhost/Projektna_Naloga_Sah_01/index.php?controller=api&action=vrniStanjeIgre",
+		url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=vrniStanjeIgre",
 		data: {"game_id":game_id},
 		success:function(data){
 			console.log(data);
@@ -181,3 +181,9 @@ function generatePolje(){
 <table class="sahovnica" id="sahovnica"> 
 
 </table>
+<div id="check" class="check">
+	
+</div>
+<div id="friendly_check" class="check">
+	
+</div>

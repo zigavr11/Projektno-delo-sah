@@ -236,7 +236,7 @@ class Sah {
 		if(Sah::preglejDiagonalo2($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true;}
 		if(Sah::preglejVrsto($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
 		if(Sah::preglejStolpec($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
-		return false;
+		echo "bla";
 	}
 	public static function King($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		if($polje[$row2][$col2] != '0'){
@@ -336,10 +336,10 @@ class Sah {
 			if(Sah::Rook($polje, $row1, $col1, $row2, $col2, $side, $figure)){
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
-				$$polje[$row1][$col1] = "0";
+				$polje[$row1][$col1] = "0";
 				$polje[$row2][$col2] = $figure;
 				if(Sah::checkForCheck($polje, $side, $figure)){
-					$$polje[$row1][$col1] = $figure;
+					$polje[$row1][$col1] = $figure;
 					$polje[$row2][$col2] = $temp;
 					$friendly_check = true;
 					$updateDB = false;
@@ -360,11 +360,9 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
-				if(Sah::sahKnight($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure){ $check = true}
 			} break;
 			case "b":
 			if(Sah::Bishop($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -381,7 +379,6 @@ class Sah {
 			} break;
 			case "q":
 			if(Sah::Queen($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -399,7 +396,6 @@ class Sah {
 			} break;
 			case "k":
 			if(Sah::King($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -413,7 +409,6 @@ class Sah {
 			} break;
 			case "p":
 			if(Sah::Pawn($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -428,7 +423,6 @@ class Sah {
 			//Black player
 			case "R":
 			if(Sah::Rook($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -444,7 +438,6 @@ class Sah {
 			} break;
 			case "N":
 			if(Sah::Knight($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -458,7 +451,6 @@ class Sah {
 			} break;
 			case "B":
 			if(Sah::Bishop($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -474,7 +466,6 @@ class Sah {
 			} break;
 			case "Q":
 			if(Sah::Queen($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -492,7 +483,6 @@ class Sah {
 			} break;
 			case "K":
 			if(Sah::King($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -506,7 +496,6 @@ class Sah {
 			} break;
 			case "P":
 			if(Sah::Pawn($polje, $row1, $col1, $row2, $col2, $side, $figure)){
-				$polje = Sah::spremeniPozicijo($polje, $row1, $col1, $row2, $col2, $figure);
 				$updateDB = true;
 				$temp = $polje[$row2][$col2];
 				$polje[$row1][$col1] = "0";
@@ -518,7 +507,6 @@ class Sah {
 					$updateDB = false;
 				}
 			} break;
-			
 		}
 		
 		
@@ -538,40 +526,6 @@ class Sah {
 			return false;
 		}
 	}
-		if($side == 1){ //Bela stran
-			//echo "[".$row1.",".$col1."] - min:".min($tempRow, $row2)."max:".max($tempRow, $row2)."\n";
-				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					//echo "polje:".$$polje[$row1][$col1];
-					if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
-						//echo "false";
-						return false;
-					}
-				}
-			}
-		else{
-			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-				if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
-					//echo "false";
-					return false;
-				}
-			}
-		}
-		if($row1 == $row2 && $col1 == $col2){
-			//echo "true";
-			$move = true;
-		}
-		else if($row1 == 7 && $col1 == 7){
-			//echo "move";
-			return $move;
-		}
-		if($row1 == $tempRow && $col1 == $tempCol){
-			$row1++;
-			$col1--;
-			//echo "continue";
-			continue;
-		}
-	}
-	
 	
 	public static function preglejDiagonalo1($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
@@ -592,7 +546,7 @@ class Sah {
 				}
 			}
 			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-				if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
+				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 					return false;
 				}
 			}
@@ -631,7 +585,7 @@ class Sah {
 		}
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]\n";
 		for($n = 0; $n < 8; $n++){
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
+			$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
 					return false;
@@ -641,8 +595,8 @@ class Sah {
 				}
 			}
 			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-				//echo "polje:".$$polje[$row1][$col1];
-				if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
+				//echo "polje:".$polje[$row1][$col1];
+				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 					//echo "false";
 					return false;
 				}
@@ -675,7 +629,7 @@ class Sah {
 		$col1 = 0;
 		for($n = 0; $n < 8; $n++){
 			//echo "col1:".$col1."min:".min($tempCol, $col2)."max:".max($tempCol, $col2)."\n";
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
+			$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
 					return false;
@@ -685,8 +639,8 @@ class Sah {
 				}
 			}
 			if($col1 > min($tempCol, $col2) && $col1 < max($tempCol, $col2)){
-				//echo "polje:".$$polje[$row1][$col1];
-				if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
+				//echo "polje:".$polje[$row1][$col1];
+				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 					//echo "false1";
 					return false;
 				}
@@ -714,7 +668,7 @@ class Sah {
 		$tempCol = $col1;
 		$row1 = 0;
 		for($n = 0; $n < 8; $n++){
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
+			$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($polje[$row2][$col2] != '0'){
 				if($side == 1 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){ //Bela stran 
 					return false;
@@ -725,14 +679,14 @@ class Sah {
 			}
 			if($side == 1){ //Bela stran
 				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
+					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 						return false;
 					}
 				}
 			}
 			else{
 				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
-					if($$polje[$row1][$col1] != $figure && $$polje[$row1][$col1] != "0"){
+					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 						return false;
 					}
 				}
@@ -779,7 +733,6 @@ class Sah {
 		$col1 = $col1 - $min;
 		
 		for($n = 0; $n < 8; $n++){
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
 				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
 					//echo "false";
@@ -821,7 +774,6 @@ class Sah {
 		}
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]\n";
 		for($n = 0; $n < 8; $n++){
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
 				//echo "polje:".$polje[$row1][$col1];
 				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
@@ -854,8 +806,6 @@ class Sah {
 		$tempCol = $col1;
 		$col1 = 0;
 		for($n = 0; $n < 8; $n++){
-			//echo "col1:".$col1."min:".min($tempCol, $col2)."max:".max($tempCol, $col2)."\n";
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($col1 > min($tempCol, $col2) && $col1 < max($tempCol, $col2)){
 				//echo "polje:".$polje[$row1][$col1];
 				if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
@@ -886,7 +836,6 @@ class Sah {
 		$tempCol = $col1;
 		$row1 = 0;
 		for($n = 0; $n < 8; $n++){
-			$$polje[$row1][$col1] = $row1 * 8 + $col1;
 			if($side == 1){ //Bela stran
 				if($row1 > min($tempRow, $row2) && $row1 < max($tempRow, $row2)){
 					if($polje[$row1][$col1] != $figure && $polje[$row1][$col1] != "0"){
@@ -938,8 +887,8 @@ class Sah {
 		if($side == -1){ // Ko naredimo potezo kor crni igralec moramo pregledati vse ostale figure belega igralca ce katera naredi sah
 			for($x = 0; $x < 8; $x++){
 				for($y = 0; $y < 8; $y++){	
-					$figure = $polje[$x * 8 + $y];
-					switch($polje[$x * 8 + $y]){
+					$figure = $polje[$x][$y];
+					switch($polje[$x][$y]){
 						//White player
 						case "r":
 							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ /*echo "r true";*/ $check = true; }
@@ -964,8 +913,8 @@ class Sah {
 		else{
 			for($x = 0; $x < 8; $x++){
 				for($y = 0; $y < 8; $y++){
-					$figure = $polje[$x * 8 + $y];
-					switch($polje[$x * 8 + $y]){
+					$figure = $polje[$x][$y];
+					switch($polje[$x][$y]){
 						//Black player
 						case "R":
 							if(Sah::sahVrsta($polje, $x, $y, $k_Row, $k_Col, $side, $figure)){ $check = true; }
@@ -994,12 +943,12 @@ class Sah {
 		for($x = 0; $x < 8; $x++){
 			for($y = 0; $y < 8; $y++){
 				if($side == -1){
-					if($polje[$x * 8 + $y] == "k"){
+					if($polje[$x][$y] == "k"){
 						$pos = $x.$y;
 					}
 				}
 				else{
-					if($polje[$x * 8 + $y] == "K"){
+					if($polje[$x][$y] == "K"){
 						$pos = $x.$y;
 					}
 				}
@@ -1013,12 +962,12 @@ class Sah {
 		for($x = 0; $x < 8; $x++){
 			for($y = 0; $y < 8; $y++){
 				if($side == 1){
-					if($polje[$x * 8 + $y] == "k"){
+					if($polje[$x][$y] == "k"){
 						$pos = $x.$y;
 					}
 				}
 				else{
-					if($polje[$x * 8 + $y] == "K"){
+					if($polje[$x][$y] == "K"){
 						$pos = $x.$y;
 					}
 				}
