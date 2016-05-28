@@ -168,9 +168,9 @@ class Sah {
 		$row = mysqli_fetch_assoc($result);
 		
 		$polje = Sah::toTable($row["stanje"]);
-		
 		$sahObj = new Sah($polje);
 		$sahObj->poteza = $row["poteza"];
+		$sahObj->check = $row["sah"];
 		
 		return $sahObj;
 	}
@@ -346,7 +346,6 @@ class Sah {
 				}
 				if(Sah::sahVrsta($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 				else if(Sah::sahStolpec($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
-				
 			} break;
 			case "n":
 			if(Sah::Knight($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -509,17 +508,20 @@ class Sah {
 			} break;
 		}
 		
-		
 		if($updateDB){
 			$move = false;
+			$c = 0;
 			$fen_string = Sah::generate2DBoard($polje);
 			if($poteza == "w")
 				$poteza = "b";
 			else
 				$poteza = "w";
-			$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $game_id)";
+			if($check){
+				$c = 1;
+			}
+			$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
 			mysqli_query($db,$sql);
-
+			
 			return true;
 		}
 		else{
@@ -704,8 +706,7 @@ class Sah {
 		}
 		return $move;
 	}
-	
-	
+
 	public static function generate2DBoard($polje){
 		$sah = array
 		(

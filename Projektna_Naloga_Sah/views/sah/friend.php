@@ -13,8 +13,10 @@
 var Click = 0;
 var newData = false;
 var poteza;
+var check;
 var sah;
 $(document).ready(function(){
+	getBoard();
 	$("#sahovnica").on("click", "td", function() {
 		if(poteza == player_turn){
 			if(Click == 0){
@@ -86,6 +88,15 @@ function getBoard(){
 					if(!sah || sah[x][y] != changed[x][y]){
 						sah = changed;
 						poteza = JSON.parse(data).poteza;
+						check = JSON.parse(data).check;
+						if(check == 1)
+							document.getElementById("check").innerHTML = "Check!";
+						else
+							document.getElementById("check").innerHTML = "No check.";
+						if(poteza == "w")
+							document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
+						else
+							document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
 						generatePolje();
 						isBreak = true;
 						break;
@@ -184,6 +195,6 @@ function generatePolje(){
 <div id="check" class="check">
 	
 </div>
-<div id="friendly_check" class="check">
+<div id="poteza" class="poteza">
 	
 </div>
