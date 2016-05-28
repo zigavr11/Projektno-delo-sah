@@ -359,6 +359,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahKnight($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 			} break;
 			case "b":
 			if(Sah::Bishop($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -374,7 +375,6 @@ class Sah {
 				}
 				if(Sah::sahDiag1($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 				else if(Sah::sahDiag2($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
-				
 			} break;
 			case "q":
 			if(Sah::Queen($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -405,6 +405,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahKing($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 			} break;
 			case "p":
 			if(Sah::Pawn($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -418,6 +419,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahPawn($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 			} break;
 			//Black player
 			case "R":
@@ -447,6 +449,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahKnight($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){ $check = true; }
 			} break;
 			case "B":
 			if(Sah::Bishop($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -492,6 +495,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahKing($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){$check = true; }
 			} break;
 			case "P":
 			if(Sah::Pawn($polje, $row1, $col1, $row2, $col2, $side, $figure)){
@@ -505,6 +509,7 @@ class Sah {
 					$friendly_check = true;
 					$updateDB = false;
 				}
+				if(Sah::sahPawn($polje, $row2, $col2, $k_Row, $k_Col, $side, $figure)){$check = true; }
 			} break;
 		}
 		
@@ -871,12 +876,90 @@ class Sah {
 		return $move;
 	}
 	public static function sahKnight($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		
+		if($row1-2 == $row2 && $col1-1 == $col2){
+			return true;
+		}
+		else if($row1-2 == $row2 && $col1+1 == $col2){
+			return true;
+		}
+		else if($row1-1 == $row2 && $col1-2 == $col2){
+			return true;
+		}
+		else if($row1-1 == $row2 && $col1+2 == $col2){
+			return true;
+		}
+		else if($row1+1 == $row2 && $col1-2 == $col2){
+			return true;
+		}
+		else if($row1+1 == $row2 && $col1+2 == $col2){
+			return true;
+		}
+		else if($row1+2 == $row2 && $col1-1 == $col2){
+			return true;
+		}
+		else if($row1+2 == $row2 && $col1+1 == $col2){
+			return true;
+		}
+		return false;
 	}
 	public static function sahPawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		
+		if($side == -1){ //Crni
+			if($row1-1 == $row2 && $col1 == $col2 && $polje[$row2][$col2] == '0'){
+				return true;
+			}
+			else if($row1-1 == $row2 && $col1-1 == $col2 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){
+				return true;
+			}
+			else if($row1-1 == $row2 && $col1+1 == $col2 && ($polje[$row2][$col2] == 'p' || $polje[$row2][$col2] == 'r' || $polje[$row2][$col2] == 'n' || $polje[$row2][$col2] == 'q' || $polje[$row2][$col2] == 'b' || $polje[$row2][$col2] == 'k')){
+				return true;
+			}
+			else if($row1-2 == $row2 && $col1 == $col2 && $row1 == 6 && $polje[$row2][$col2] == '0'){
+				return true;
+			}
+			return false;
+		}
+		else{ //Beli
+			if($row1+1 == $row2 && $col1 == $col2 && $polje[$row2][$col2] == '0'){
+				return true;
+			}
+			else if($row1+1 == $row2 && $col1-1 == $col2 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){
+				return true;
+			}
+			else if($row1+1 == $row2 && $col1+1 == $col2 && ($polje[$row2][$col2] == 'P' || $polje[$row2][$col2] == 'R' || $polje[$row2][$col2] == 'N' || $polje[$row2][$col2] == 'Q' || $polje[$row2][$col2] == 'B'|| $polje[$row2][$col2] == 'K')){
+				return true;
+			}
+			else if($row1+2 == $row2 && $col1 == $col2 && $row1 == 1 && $polje[$row2][$col2] == '0'){
+				return true;
+			}
+			return false;
+		}
 	}
-	
+	public static function sahKing($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		if($row1-1 == $row2 && $col1-1 == $col2){	//left up
+			return true;
+		}
+		else if($row1-1 == $row2 && $col1 == $col2){ //middle up
+			return true;
+		}
+		else if($row1-1 == $row2 && $col1+1 == $col2){	//right up
+			return true;
+		}
+		else if($row1 == $row2 && $col1-1 == $col2){ //left
+			return true;
+		}
+		else if($row1 == $row2 && $col1+1 == $col2){ //right
+			return true;
+		}
+		else if($row1+1 == $row2 && $col1-1 == $col2){ //left bottom
+			return true;
+		}
+		else if($row1+1 == $row2 && $col1 == $col2){ //middle bottom
+			return true;
+		}
+		else if($row1+1 == $row2 && $col1+1 == $col2){ //right bottom
+			return true;
+		}
+	}
 	public static function checkForCheck($polje, $side, $figure){
 		$check = false;
 		$pos = Sah::getFriendlyKingPosition($side, $polje);
