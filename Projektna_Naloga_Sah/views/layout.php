@@ -147,8 +147,6 @@
 					else
 						echo "<div id=\"panel_aktivne_igre\" style=\"display: none;\" class=\"panel panel-default\"> </div>";
 				?>
-				
-				
 				</div>
 				<hr>
 			</div>

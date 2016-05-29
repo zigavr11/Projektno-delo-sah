@@ -47,7 +47,7 @@
 		}
 		
 		public static function endGame(){
-			Sah::endGame($_GET["game_id"], $_GET["forfeit"]); //post ni delal zakaj?
+			Sah::endGame($_POST["game_id"], $_POST["forfeit"]); //post ni delal zakaj?
 			SahController::endScreen();
 		}
 		

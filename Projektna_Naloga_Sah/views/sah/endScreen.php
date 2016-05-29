@@ -9,5 +9,4 @@
 	else
 		echo "Na žalost si izgubil. :(";
 	
-	
 ?>
