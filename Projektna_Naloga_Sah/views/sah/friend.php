@@ -4,7 +4,6 @@
 	$db = Db::getInstance();
 	$sql = "SELECT * FROM igra WHERE igra.id = ".$_GET["game_id"]." AND tk_uporabnik1 = ".$_SESSION["id"]."";
 	$result = mysqli_query($db,$sql);
-	//$row = mysqli_fetch_assoc($result);
 	$move = "b";
 	if(mysqli_num_rows($result) == 1)
 		$move = "w";
@@ -85,11 +84,10 @@ function getBoard(){
 			for(var x = 0; x < 8; x++){
 				var isBreak = false;
 				for(var y = 0; y < 8; y++){
-					if(!sah || sah[x][y] != changed[x][y]){
+					if(!sah || sah[x][y] != changed[x][y]){ //pregleda ce sah polje obstaja in ali je kaksna sprememba
 						sah = changed;
 						poteza = JSON.parse(data).poteza;
-						check = JSON.parse(data).check;
-						if(check == 1)
+						if(JSON.parse(data).check == 1) 
 							document.getElementById("check").innerHTML = "Check!";
 						else
 							document.getElementById("check").innerHTML = "No check.";
@@ -97,6 +95,10 @@ function getBoard(){
 							document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
 						else
 							document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
+						if(JSON.parse(data).stanje_igre == 'e'){
+							var newLocation = "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=endScreen&game_id=22";
+							window.location = newLocation;
+						}
 						generatePolje();
 						isBreak = true;
 						break;
@@ -198,3 +200,9 @@ function generatePolje(){
 <div id="poteza" class="poteza">
 	
 </div>
+
+<?php
+	echo "<form method=\"get\" action=\"?controller=sah&action=endGame&forfeit=1&game_id=".$_GET["game_id"]."\">";
+?>
+	<button type="submit" class="btn btn-default">Predaj se</button>
+</form>

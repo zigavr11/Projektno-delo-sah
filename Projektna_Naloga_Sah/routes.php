@@ -26,7 +26,7 @@
    $controllers = array('strani' => ['domov', 'PrijateljNeobstaja', 'PrijateljObstaja' ,'napaka'],
 					   'uporabnik' => ['index', 'prikazi','shrani', 'profile', 'dodaj_Prijatelja'],
 					   'registracija' => ['index','shrani', 'prijavaHTML', 'prijava', 'odjava'],
-					   'sah' => ['index', 'ai', 'friend', 'opponent', 'move']);
+					   'sah' => ['index', 'ai', 'friend', 'opponent', 'move', 'endGame', 'endScreen']);
   if (array_key_exists($controller, $controllers)) {
     if (in_array($action, $controllers[$controller])) {
       call($controller, $action);

@@ -16,6 +16,7 @@
 			margin-bottom: 0;
 			border-radius: 0;
 		}
+
 		
 		table td.active1 {
 			background: #ff8000;
@@ -65,7 +66,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
 				</button>
-				<a class="navbar-brand" href="?controller=strani&action=domov">Projektno delo - Sah</a>
+				<a class="navbar-brand" href="?controller=strani&action=">Projektno delo - Sah</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
@@ -129,12 +130,25 @@
 				</div>
 				<div class="panel panel-default">
 				<div class="panel-heading">Izzivi od prijateljev</div>
-				<div id="panel_izzivi" class="panel panel-default"> </div>
+				<?php
+					if(!isset($_GET["game_id"]))
+						echo "<div id=\"panel_izzivi\" class=\"panel panel-default\"> </div>";
+					else
+						echo "<div id=\"panel_izzivi\" style=\"display: none;\" class=\"panel panel-default\"> </div>";
+					
+				?>
 				</div>
 				<hr>
 				<div class="panel panel-default">
 				<div class="panel-heading">Aktivne igre</div>
-				<div id="panel_aktivne_igre" class="panel panel-default"> </div>
+				<?php
+					if(!isset($_GET["game_id"]))
+						echo "<div id=\"panel_aktivne_igre\" class=\"panel panel-default\"> </div>";
+					else
+						echo "<div id=\"panel_aktivne_igre\" style=\"display: none;\" class=\"panel panel-default\"> </div>";
+				?>
+				
+				
 				</div>
 				<hr>
 			</div>
