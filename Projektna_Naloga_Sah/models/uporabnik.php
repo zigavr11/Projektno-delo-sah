@@ -97,18 +97,6 @@
 			return $list;
 		}
 		
-		public static function checkIzzive(){
-			/*$db = Db::getInstance();
-			$result = mysqli_query($db,"SELECT * FROM izziv, uporabnik WHERE id_uporabnika = uporabnik.id AND id_prijatelja = \"".$_SESSION["id"]."\"");
-		
-			while($row = mysqli_fetch_assoc($result)){
-				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
-			}
-			return $list;*/
-			//????????????????????????
-			
-		}
-		
 		public static function updateIzzive($novo_stanje, $id_prijatelja){
 			$db = Db::getInstance();
 			if($novo_stanje == "a"){
