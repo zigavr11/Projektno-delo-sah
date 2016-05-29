@@ -57,8 +57,10 @@
 		
 		public static function updateIzzive(){
 			Uporabnik::updateIzzive($_POST["novo_stanje"], $_POST["friend_id"]);
-			$id = Sah::newGameVsFriend($_POST["friend_id"]);
-			echo $id;
+			if($_POST["novo_stanje"] == "a"){
+				$id = Sah::newGameVsFriend($_POST["friend_id"]);
+				echo $id;
+			}
 		}
 	}
 ?>
