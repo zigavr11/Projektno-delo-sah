@@ -26,5 +26,9 @@
 	public function dodaj_Prijatelja() {
 		Uporabnik::dodajPrijatelja($_POST["username"]);
 	}
+	
+	public function pravila(){
+		require_once('views/uporabnik/replays.php');
+	}
   }
 ?>

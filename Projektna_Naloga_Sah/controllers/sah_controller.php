@@ -46,10 +46,21 @@
 			echo json_encode($stanje_izzivov);
 		}
 		
+		public static function endGame(){
+			Sah::endGame($_POST["game_id"], $_POST["forfeit"]); //post ni delal zakaj?
+			SahController::endScreen();
+		}
+		
+		public static function endScreen(){
+			require_once('views/sah/endScreen.php');
+		}
+		
 		public static function updateIzzive(){
 			Uporabnik::updateIzzive($_POST["novo_stanje"], $_POST["friend_id"]);
-			$id = Sah::newGameVsFriend($_POST["friend_id"]);
-			echo $id;
+			if($_POST["novo_stanje"] == "a"){
+				$id = Sah::newGameVsFriend($_POST["friend_id"]);
+				echo $id;
+			}
 		}
 	}
 ?>

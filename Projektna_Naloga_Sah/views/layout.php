@@ -4,17 +4,59 @@
 ?>
 <html>
 	<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	<script src="main.js"></script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="main.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script src="http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.js"
+		type="text/javascript"></script>
+
+		<style type="text/css">
+			@import url("http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.css");
+
+			#feedControl {
+				margin-top : 10px;
+				margin-left: auto;
+				margin-right: auto;
+				font-size: 12px;
+				color: #9CADD0;
+			}
+		</style>
+		<script type="text/javascript">
+			function load() {
+			var feed ="https://www.chess.com/rss/news";
+			new GFdynamicFeedControl(feed, "feedControl1");
+
+			}
+			google.load("feeds", "1");
+			google.setOnLoadCallback(load);
+		</script>
+		<script type="text/javascript">
+			function load() {
+			var feed ="http://theweekinchess.com/twic-rss-feed";
+			new GFdynamicFeedControl(feed, "feedControl2");
+
+			}
+			google.load("feeds", "1");
+			google.setOnLoadCallback(load);
+		</script>
 	</head>
 	<style>
 		.navbar {
 			margin-bottom: 0;
 			border-radius: 0;
+		}
+		
+		mainnav{
+			height:100%;
+		}
+		
+		table{
+			border-style: solid;
+			margin-top:5px;
 		}
 		
 		table td.active1 {
@@ -65,13 +107,14 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
 				</button>
-				<a class="navbar-brand" href="?controller=strani&action=domov">Projektno delo - Sah</a>
+				<a class="navbar-brand" href="?controller=strani&action=">Projektno delo - Sah</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='?controller=strani&action=domov'>Domov</a></li>
 					<li <?php if($action=='profile') echo "class=\"active\""?>><a href='?controller=uporabnik&action=profile'>Profil</a></li>
-					<li><a href='?controller=sah&action=index'>Igra</a></li>
+					<li <?php if($action=='pravila') echo "class=\"active\""?>><a href='?controller=uporabnik&action=pravila'>Pravila</a></li>
+					<li><a href='?controller=sah&action=index'>Igraj</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 				<?php
@@ -92,8 +135,9 @@
 		<div class="row content">
 			<div class="col-sm-2 sidenav">
 				<p><a href="?controller=&action=">Novice</a></p>
+				
 			</div>
-			<div class="col-sm-8 text-left"> 
+			<div class="col-sm-8 text-left mainnav"> 
 				<?php require_once('routes.php'); ?> 
 			</div>
 			
@@ -129,12 +173,33 @@
 				</div>
 				<div class="panel panel-default">
 				<div class="panel-heading">Izzivi od prijateljev</div>
-				<div id="panel_izzivi" class="panel panel-default"> </div>
+				<?php
+					if(!isset($_GET["game_id"]))
+						echo "<div id=\"panel_izzivi\" class=\"panel panel-default\"> </div>";
+					else
+						echo "<div id=\"panel_izzivi\" style=\"display: none;\" class=\"panel panel-default\"> </div>";
+					
+				?>
 				</div>
 				<hr>
 				<div class="panel panel-default">
 				<div class="panel-heading">Aktivne igre</div>
-				<div id="panel_aktivne_igre" class="panel panel-default"> </div>
+				<?php
+					if(!isset($_GET["game_id"]))
+						echo "<div id=\"panel_aktivne_igre\" class=\"panel panel-default\"> </div>";
+					else
+						echo "<div id=\"panel_aktivne_igre\" style=\"display: none;\" class=\"panel panel-default\"> </div>";
+				?>
+				</div>
+				<div class="panel panel-default">
+				<div class="panel-heading">Najdi podobnega igralca</div>
+					<?php 
+						if(isset($_SESSION["username"])){
+							echo "<button type=\"button\" onclick='alert(\"Predlagan igralec: ziga\")'>Isci!</button>"; 
+						} else {
+							echo "Za iskanje nasprotnika se morate registrirate/vpisati";
+						}
+					?>
 				</div>
 				<hr>
 			</div>
