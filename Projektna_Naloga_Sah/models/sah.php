@@ -101,38 +101,32 @@ class Sah {
 	return $table;
  }
 	
-	public static function newGameVsAi(){
-		if(!isset($_SESSION["in_game"])){
-			$_SESSION["in_game"] = "l";
-			$_SESSION["barva"] = "w";
-			$_SESSION["id"];
-			$db = Db::getInstance();
-			$tezavnost = "easy";
-			if($tezavnost == "hard"){
-				$uporabnik2 = -3;
-			}
-			else if($tezavnost == "medium"){
-				$uporabnik2 = -2;
-			}
-			else{
-				$uporabnik2 = -1;
-			}
-			$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
-			
-			mysqli_query($db , $sql);
-			$id = mysqli_insert_id($db);
-			$fen_string = Sah::toFEN(Sah::generateNewBoard());
-			
-			$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
-			mysqli_query($db,$sql);
-			
-			$polje = Sah::toTable($fen_string);
-			return new Sah($polje);
+	/*public static function newGameVsAi(){
+		$_SESSION["barva"] = "w";
+		$_SESSION["id"];
+		$db = Db::getInstance();
+		$tezavnost = "easy";
+		if($tezavnost == "hard"){
+			$uporabnik2 = -3;
+		}
+		else if($tezavnost == "medium"){
+			$uporabnik2 = -2;
 		}
 		else{
-			
+			$uporabnik2 = -1;
 		}
-	}
+		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
+		
+		mysqli_query($db , $sql);
+		$id = mysqli_insert_id($db);
+		$fen_string = Sah::toFEN(Sah::generateNewBoard());
+		
+		$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
+		mysqli_query($db,$sql);
+		
+		$polje = Sah::toTable($fen_string);
+		return new Sah($polje);
+	}*/
 	
 	public static function newGameVsFriend($friend_id){
 		$_SESSION["barva"] = "w";
@@ -913,12 +907,11 @@ class Sah {
 		return false;
 	}
 	public static function sahPawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		//zamenjamo strani
 		if($side == 1)
 			$side = -1;
 		else
 			$side = 1;
-		
+
 		if($side == -1){ //Crni
 			if($row1-1 == $row2 && $col1 == $col2 && $polje[$row2][$col2] == '0'){
 				return true;
@@ -1073,6 +1066,7 @@ class Sah {
 		}
 		return $pos;
 	}
+	
 	public static function getFriendlyKingPosition($side, $polje){
 		
 		$pos = "";
