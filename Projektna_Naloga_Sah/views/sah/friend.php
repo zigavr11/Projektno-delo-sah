@@ -81,7 +81,7 @@ $(document).ready(function(){
 					}
 				}	
 			}
-		} //else {Koda za AI}
+		} //else {function AI()}
 	});
 	setInterval(function(){
 		getBoard();
@@ -96,25 +96,28 @@ function getBoard(){
 		success:function(data){
 			console.log(data);
 			var changed = JSON.parse(data).polje;
+			
+			if(JSON.parse(data).check == 1) 
+				document.getElementById("check").innerHTML = "Check!";
+			else
+				document.getElementById("check").innerHTML = "No check.";
+			if(poteza == "w")
+				document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
+			else
+				document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
+			
+			poteza = JSON.parse(data).poteza;
+			
 			if(JSON.parse(data).stanje_igre == "e"){
 				var newLocation = "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=endScreen&game_id="+game_id;
 				window.location = newLocation;
 			}
+			
 			for(var x = 0; x < 8; x++){
 				var isBreak = false;
 				for(var y = 0; y < 8; y++){
 					if(!sah || sah[x][y] != changed[x][y]){ //pregleda ce sah polje obstaja in ali je kaksna sprememba
-						sah = changed;
-						poteza = JSON.parse(data).poteza;
-						if(JSON.parse(data).check == 1) 
-							document.getElementById("check").innerHTML = "Check!";
-						else
-							document.getElementById("check").innerHTML = "No check.";
-						if(poteza == "w")
-							document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
-						else
-							document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
-						
+						sah = changed;						
 						generatePolje();
 						isBreak = true;
 						break;
@@ -160,19 +163,19 @@ function generatePolje(){
 				if(total%2==0)  
 				{  
 					if(figureName != ""){
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=45px width=45px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else {
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
+						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#ffce9e> </td>";   
 					}
 				}  
 				else  
 				{
 					if(figureName != ""){
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47> <img height=45px width=45px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else{
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
+						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47></td>"; 
 					}
 				} 
 			}
@@ -182,19 +185,19 @@ function generatePolje(){
 				if(total%2==0)  
 				{  
 					if(figureName != ""){
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td  id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else {
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
+						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#ffce9e> </td>";   
 					}
 				}  
 				else  
 				{
 					if(figureName != ""){
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else{
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
+						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47></td>"; 
 					}
 				} 
 			}

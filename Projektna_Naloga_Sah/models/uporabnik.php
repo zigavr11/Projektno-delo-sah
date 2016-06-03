@@ -82,8 +82,12 @@
   
 		public static function izzoviPrijatelja($id_prijatelja){
 			$db = Db::getInstance();
-			$sql = "INSERT INTO izziv(id_uporabnika, id_prijatelja, stanje) VALUES (\"".$_SESSION["id"]."\", \"".$id_prijatelja."\", \"w\")";
-			mysqli_query($db, $sql);
+			$sql = "SELECT * FROM izziv WHERE (id_uporabnika = ".$_SESSION["id"]." || id_uporabnika = ".$id_prijatelja.") AND (id_prijatelja = ".$id_prijatelja." || id_prijatelja = ".$_SESSION["id"].")";
+			$result = mysqli_query($db, $sql);
+			if(mysqli_num_rows($result) == 0){
+				$sql = "INSERT INTO izziv(id_uporabnika, id_prijatelja, stanje) VALUES (\"".$_SESSION["id"]."\", \"".$id_prijatelja."\", \"w\")";
+				mysqli_query($db, $sql);
+			}
 		}
 		
 		public static function vrniIzzive(){

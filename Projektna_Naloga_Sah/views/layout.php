@@ -56,8 +56,12 @@
 		
 		table{
 			border-style:solid;
-			border-width:2px;
-			margin-top:5px;
+			border-width:1px;
+			border-color:black;
+		}
+		
+		td{
+			text-align:center;
 		}
 		
 		table td.active1 {
@@ -87,7 +91,7 @@
 			color: #9d9d9d;
 			padding: 9px;
 		}
-
+		
 		@media screen and (max-width: 767px) {
 			.sidenav {
 				height: auto;
@@ -102,13 +106,41 @@
 			pointer-events: none;
 			cursor: default;
 		}
+		
+		.btn-outlined {
+			border-radius: 0;
+			-webkit-transition: all 0.3s;
+			   -moz-transition: all 0.3s;
+					transition: all 0.3s;
+		}
+		
+		.btn-outlined.btn-info {
+			background: none;
+			border: 3px solid #222222;
+			color: black;
+			height:150px;
+			width:150px;
+		}
+		.btn-outlined.btn-info:hover,
+		.btn-outlined.btn-info:active {
+			color: #FFF;
+			background: #222222;
+			height:150px;
+			width:150px;
+		}
+		
+		.game{
+			float:left;
+			margin-left:5px;
+			margin-top:5px;
+		}
 	</style>
 	<body>
   
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<button type="button" class="navbar-toggle " data-toggle="collapse" data-target="#myNavbar">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
@@ -130,10 +162,10 @@
 							</li>";
 						}
 						else{
-							echo "<li"; if($action=='profile') echo " class=\"active\"";
+							echo "<li "; if($action=='profile') echo " class=\"active\"";
 							echo "> <a href='#' class=\"dropdown-toggle inactiveLink\" data-toggle=\"dropdown\"><span class=\"glyphicon glyphicon-user\"></span> Profil<span class=\"caret\"></span></a>
 								<ul class=\"dropdown-menu\">
-								  <li><a href=\"?controller=uporabnik&action=profile\"><span class=\"glyphicon glyphicon-eye-open\"></span> Ogled profila</a></li>
+								  <li><a href=\"?controller=uporabnik&action=profile\  ><span class=\"glyphicon glyphicon-eye-open\"></span> Ogled profila</a></li>
 								  <li><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span> Spremeni profil</a></li> 
 								  <li><a href=\"?controller=uporabnik&action=zgodovina\"><span class=\"glyphicon glyphicon-film\"></span> Zgodovina iger</a></li>
 								</ul>
@@ -171,18 +203,25 @@
 			</div>
 			
 			<div class="col-sm-2 sidenav">
-				<div class="panel panel-default">
-					<div class="panel-heading">Prijatelji</div>
+				<div class="panel panel-default ">
+					<div class="panel-heading ">Prijatelji</div>
 					<?php
 						if(isset($_SESSION["username"])){
 							$db = Db::getInstance();
 							$result = mysqli_query($db,"SELECT * FROM uporabnik, prijatelji WHERE uporabnik.id = id_prijatelja AND id_uporabnika = ".$_SESSION["id"]."");
 			
 							while($row = mysqli_fetch_assoc($result)){
-								echo "<div class=\"panel-body\">".$row["uporabnisko_ime"]."
-								<button type=\"button\" id=\"".$row["id"]."\" class=\"btn btn-primary btn-xs glyphicon glyphicon-play friend_play\"></button>
-								</div>";
-
+								
+								$sql = "SELECT * FROM izziv WHERE (id_uporabnika = ".$_SESSION["id"]." || id_uporabnika = ".$row["id"].") AND (id_prijatelja = ".$row["id"]." || id_prijatelja = ".$_SESSION["id"].")";
+								$res = mysqli_query($db, $sql);
+								if(mysqli_num_rows($res) == 0){
+									echo "<div class=\"panel-body well well-sm\">".$row["uporabnisko_ime"]."
+									<button type=\"button\" id=\"".$row["id"]."\" class=\"btn btn-primary btn-xs glyphicon glyphicon-play friend_play\"></button>
+									</div>";
+								}
+								else{
+									echo "<div class=\"panel-body\">".$row["uporabnisko_ime"]."</div>";
+								}
 							}
 							
 							echo "<form class=\"form-inline\" method=\"post\" action=\"?controller=uporabnik&action=dodaj_Prijatelja\" >";

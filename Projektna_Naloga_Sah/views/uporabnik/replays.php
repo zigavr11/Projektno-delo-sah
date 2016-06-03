@@ -111,12 +111,15 @@ function previousMove(){
 			$sql = "SELECT * FROM igra WHERE igra.tk_uporabnik1 = ".$_SESSION["id"]." || igra.tk_uporabnik2 = ".$_SESSION["id"]."";
 			$result = mysqli_query($db,$sql);
 			$stevec = 1;
-			echo "Replays: <br>";
+			
+			echo "<div align=\"center\" class=\"rook_description well well-sm\">Replays: </div><br>";
+			echo "<div class=\"games\">";
 			while($row = mysqli_fetch_assoc($result)){
-				echo "<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\">Igra".$row["id"]."</a><br>";
+				echo "<div class=\"game\"><a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\" class=\"btn btn-outlined btn-info\">Igra".$row["id"]."</a></div>";
 				$list[] = $row["id"];
 				$stevec++;
 			}
+			echo "</div>";
 		}
 	}
 	else{

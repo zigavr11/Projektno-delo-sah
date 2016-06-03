@@ -96,7 +96,7 @@
 				if(total%2==0)  
 				{  
 					if(figureName != ""){
-						sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=37px width=37px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=32px  src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else {
 						sahovnica += "<td id=\""+x+y+figureChar+"\" height=37px width=37px bgcolor=#ffce9e> </td>";   
@@ -105,7 +105,7 @@
 				else  
 				{
 					if(figureName != ""){
-						sahovnica += "<td id=\""+x+y+figureChar+"\" height=37px width=37px bgcolor=#d18b47> <img height=37px width=37px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=37px width=37px bgcolor=#d18b47> <img height=32px  src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
 					}
 					else{
 						sahovnica += "<td id=\""+x+y+figureChar+"\" height=37px width=37px bgcolor=#d18b47></td>"; 
@@ -141,7 +141,6 @@
 .poteze{
 }
 .align{
-	padding-left:10px;
 	text-align:center;
 }
 .layout{
@@ -150,7 +149,7 @@
 .animation{
 	margin-left:2px;
 }
-img{
+pravila{
 	margin-top:5px;
 }
 </style>
@@ -158,88 +157,95 @@ img{
 
 	<div id="0" class="rook align">
 		<div class="rook_description well well-sm"> Poteze ki jih lahko naredi trdnjava. </div>
-		<div id="rook" class="0 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possibleRookMoves.jpg" />
-			<div id="rook_Anim" class ="animation"> </div>
+		<div id="rook" class="0 layout row">
+				<div class="col-md-6">
+					<img class="pravila" height="297px" width="296px" src="images/Chess_Moves/possibleRookMoves.jpg" />
+				</div>
+				<div class="col-md-6">
+					<div id="rook_Anim" class ="animation"> </div>
+					<button type="button" onclick="startReplay()" style="margin-top:2px" class="btn btn-primary"> Play </button>
+					<button type="button" onclick="stopReplay()" style="margin-top:2px" class="btn btn-warning"> Stop </button>
+				</div>
 		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
-		</div>
-		
-	</div> 
+	</div>
+	
 	
 	<div id="1" class="bishop align" style="display:none">
 		<div class="bishop_description well well-sm"> Poteze ki jih lahko naredi tekač. </div>
-		<div id="bishop" class="1 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possibleBishopMoves.jpg" />
-			<div id="bishop_Anim" class ="animation"> </div>
-		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		<div id="bishop" class="1 layout row">
+			<div class="col-md-6">
+				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleBishopMoves.jpg" />
+			</div>
+			<div class="col-md-6">
+				<div id="bishop_Anim" class ="animation"> </div>
+				<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+				<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+			</div>
 		</div>
 	</div> 
 	
 	<div id="2" class="knight align" style="display:none">
 		<div class="knight_description well well-sm"> Poteze ki jih lahko naredi konj. </div>
-		<div id="knight" class="2 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possibleKnightMoves.jpg" />
-			<div id="knight_Anim" class ="animation"> </div>
-		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		<div id="knight" class="2 layout row">
+			<div class="col-md-6">
+				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleKnightMoves.jpg" />
+			</div>
+			<div class="col-md-6">
+				<div id="knight_Anim" class ="animation"> </div>
+				<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+				<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+			</div>
 		</div>
 	</div> 
 	
 	<div id="3" class="queen align" style="display:none">
 		<div class="queen_description well well-sm"> Poteze ki jih lahko naredi kraljica. </div>
-		<div id="queen" class="3 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possibleQueenMoves.jpg" />
-			<div id="queen_Anim" class ="animation"> </div>
-		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		<div id="queen" class="3 layout row">
+			<div class="col-md-6">
+				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleQueenMoves.jpg" />
+			</div>
+			<div class="col-md-6">
+				<div id="queen_Anim" class ="animation"> </div>
+				<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+				<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+			</div>
 		</div>
 	</div> 
 	
 	<div id="4" class="king align" style="display:none">
 		<div class="king_description well well-sm"> Poteze ki jih lahko naredi kralj. </div>
-		<div id="king" class="4 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possibleKingMoves.jpg" />
-			<div id="king_Anim" class ="animation"> </div>
-		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		<div id="king" class="4 layout row">
+			<div class="col-md-6">
+				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleKingMoves.jpg" />
+			</div>
+			<div class="col-md-6">
+				<div id="king_Anim" class ="animation"> </div>
+				<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+				<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+			</div>
 		</div>
 	</div> 
 	
 	<div id="5" class="pawn align" style="display:none">
 		<div class="pawn_description well well-sm"> Poteze ki jih lahko naredi kmet. </div>
-		<div id="pawn" class="5 layout">
-			<img height="300px" width="300px" src="images/Chess_Moves/possiblePawnMoves.jpg" />
-			<div id="pawn_Anim" class ="animation"> </div>
-		</div>
-		<div class="btn-group-vertical">
-			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
-			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		<div id="pawn" class="5 layout row">
+			<div class="col-md-6">
+				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possiblePawnMoves.jpg" />
+			</div>
+			<div class="col-md-6">
+				<div id="pawn_Anim" class ="animation"> </div>
+				<button type="button" onclick="startReplay()" style="margin-top:2px" class="btn btn-primary"> Play </button>
+				<button type="button" onclick="stopReplay()" style="margin-top:2px" class="btn btn-warning"> Stop </button>
+			</div>
 		</div>
 	</div> 
-	
-	
 		
-	<div class="row">
-		<div class="col-md-6 text-center">
-			<button class="previous"> Previous</button>
-		</div>
-		<div class="col-md-6 text-center">
-			<button class="next" > Next</button>
-		</div>
+	<div align="right" class="col-md-6">
+		<button class="previous"> Previous</button>
 	</div>
-	
+	<div class="col-md-6">
+		<button class="next" > Next</button>
+	</div>
 </div>
 
 
