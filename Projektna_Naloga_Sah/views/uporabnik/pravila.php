@@ -157,65 +157,80 @@ img{
 <div class="poteze">
 
 	<div id="0" class="rook align">
-		<div class="rook_description"> Poteze ki jih lahko naredi trdnjava. </div>
+		<div class="rook_description well well-sm"> Poteze ki jih lahko naredi trdnjava. </div>
 		<div id="rook" class="0 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possibleRookMoves.jpg" />
 			<div id="rook_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" id="p_rook" onclick="startReplay()" class="p_rook"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
+		
 	</div> 
 	
 	<div id="1" class="bishop align" style="display:none">
-		<div class="bishop_description"> Poteze ki jih lahko naredi tekač. </div>
+		<div class="bishop_description well well-sm"> Poteze ki jih lahko naredi tekač. </div>
 		<div id="bishop" class="1 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possibleBishopMoves.jpg" />
 			<div id="bishop_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" onclick="startReplay()" id="p_bishop"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
 	</div> 
 	
 	<div id="2" class="knight align" style="display:none">
-		<div class="knight_description"> Poteze ki jih lahko naredi konj. </div>
+		<div class="knight_description well well-sm"> Poteze ki jih lahko naredi konj. </div>
 		<div id="knight" class="2 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possibleKnightMoves.jpg" />
 			<div id="knight_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" onclick="startReplay()" id="p_knight"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
 	</div> 
 	
 	<div id="3" class="queen align" style="display:none">
-		<div class="queen_description"> Poteze ki jih lahko naredi kraljica. </div>
+		<div class="queen_description well well-sm"> Poteze ki jih lahko naredi kraljica. </div>
 		<div id="queen" class="3 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possibleQueenMoves.jpg" />
 			<div id="queen_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" onclick="startReplay()" id="p_queen"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
 	</div> 
 	
 	<div id="4" class="king align" style="display:none">
-		<div class="king_description"> Poteze ki jih lahko naredi kralj. </div>
+		<div class="king_description well well-sm"> Poteze ki jih lahko naredi kralj. </div>
 		<div id="king" class="4 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possibleKingMoves.jpg" />
 			<div id="king_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" onclick="startReplay()" id="p_king"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
 	</div> 
 	
 	<div id="5" class="pawn align" style="display:none">
-		<div class="pawn_description"> Poteze ki jih lahko naredi kmet. </div>
+		<div class="pawn_description well well-sm"> Poteze ki jih lahko naredi kmet. </div>
 		<div id="pawn" class="5 layout">
 			<img height="300px" width="300px" src="images/Chess_Moves/possiblePawnMoves.jpg" />
 			<div id="pawn_Anim" class ="animation"> </div>
 		</div>
-		<button type="button" onclick="startReplay()" id="p_pawn"> Play </button>
-		<button type="button" onclick="stopReplay()" id="p_pawn"> Stop </button>
+		<div class="btn-group-vertical">
+			<button type="button" onclick="startReplay()" class="btn btn-primary"> Play </button>
+			<button type="button" onclick="stopReplay()" class="btn btn-warning"> Stop </button>
+		</div>
 	</div> 
 	
+	
+		
 	<div class="row">
 		<div class="col-md-6 text-center">
 			<button class="previous"> Previous</button>

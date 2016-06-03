@@ -1,7 +1,7 @@
 <?php
 	class RegistracijaController {
 		public function index(){
-		  require_once('views/registracija/index.php');
+			require_once('views/registracija/index.php');
 		}
 		
 		public function shrani() {

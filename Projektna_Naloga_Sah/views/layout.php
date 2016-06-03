@@ -97,6 +97,11 @@
 				height:auto;
 			} 
 		}
+		
+		.inactiveLink {
+			pointer-events: none;
+			cursor: default;
+		}
 	</style>
 	<body>
   
@@ -108,15 +113,37 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
 				</button>
-				<a class="navbar-brand" href="?controller=strani&action=">Projektno delo - Sah</a>
+				<a class="navbar-brand" >Projektno delo - Sah</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='?controller=strani&action=domov'>Domov</a></li>
-					<li <?php if($action=='profile') echo "class=\"active\""?>><a href='?controller=uporabnik&action=profile'>Profil</a></li>
-					<li <?php if($action=='pravila') echo "class=\"active\""?>><a href='?controller=uporabnik&action=pravila'>Pravila</a></li>
-					<li <?php if($action=='zgodovina') echo "class=\"active\""?>><a href='?controller=uporabnik&action=zgodovina'>Zgodovina iger</a></li>
-					<li><a href='?controller=sah&action=index'>Igraj</a></li>
+					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='?controller=strani&action=domov'><span class="glyphicon glyphicon-home"></span> Domov</a></li>
+					<?php
+						if(isset($_SESSION["id"])){
+							echo "<li"; if($action=='profile') echo " class=\"active\"";
+							echo "> <a href='#' class=\"dropdown-toggle \" data-toggle=\"dropdown\"><span class=\"glyphicon glyphicon-user\"></span> Profil<span class=\"caret\"></span></a>
+								<ul class=\"dropdown-menu\">
+								  <li><a href=\"?controller=uporabnik&action=profile\"><span class=\"glyphicon glyphicon-eye-open\"></span> Ogled profila</a></li>
+								  <li><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span> Spremeni profil</a></li> 
+								  <li><a href=\"?controller=uporabnik&action=zgodovina\"><span class=\"glyphicon glyphicon-film\"></span> Zgodovina iger</a></li>
+								</ul>
+							</li>";
+						}
+						else{
+							echo "<li"; if($action=='profile') echo " class=\"active\"";
+							echo "> <a href='#' class=\"dropdown-toggle inactiveLink\" data-toggle=\"dropdown\"><span class=\"glyphicon glyphicon-user\"></span> Profil<span class=\"caret\"></span></a>
+								<ul class=\"dropdown-menu\">
+								  <li><a href=\"?controller=uporabnik&action=profile\"><span class=\"glyphicon glyphicon-eye-open\"></span> Ogled profila</a></li>
+								  <li><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span> Spremeni profil</a></li> 
+								  <li><a href=\"?controller=uporabnik&action=zgodovina\"><span class=\"glyphicon glyphicon-film\"></span> Zgodovina iger</a></li>
+								</ul>
+							</li>";
+						}
+					?>
+					
+					<li <?php if($action=='pravila') echo "class=\"active\""?>><a href='?controller=uporabnik&action=pravila'><span class="glyphicon glyphicon-education"></span> Pravila</a></li>
+					<li <?php if($action=='zgodovina') echo "class=\"active\""?>><a href='?controller=uporabnik&action=zgodovina'><span class="glyphicon glyphicon-film"></span> Zgodovina iger</a></li>
+					<li <?php if($action=='index') echo "class=\"active\""?>><a href='?controller=sah&action=index'><span class="glyphicon glyphicon-play"></span> Igraj</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 				<?php

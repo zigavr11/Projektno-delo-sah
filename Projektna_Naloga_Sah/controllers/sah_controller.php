@@ -6,7 +6,7 @@
 		}
 		
 		public function ai(){
-			$Sah = Sah::newGameVsAi();
+			$id = Sah::newGameVsAi();
 			require_once('views/sah/ai.php');
 		}
 		
@@ -32,6 +32,7 @@
 			$igre = Sah::returnActiveGames();
 			echo json_encode($igre);
 		}
+		
 		public function izzoviPrijatelja(){
 			Uporabnik::izzoviPrijatelja($_POST["friend_id"]);
 		}

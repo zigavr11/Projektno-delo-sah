@@ -101,21 +101,10 @@ class Sah {
 	return $table;
  }
 	
-	/*public static function newGameVsAi(){
-		$_SESSION["barva"] = "w";
-		$_SESSION["id"];
+	public static function newGameVsAi(){
 		$db = Db::getInstance();
-		$tezavnost = "easy";
-		if($tezavnost == "hard"){
-			$uporabnik2 = -3;
-		}
-		else if($tezavnost == "medium"){
-			$uporabnik2 = -2;
-		}
-		else{
-			$uporabnik2 = -1;
-		}
-		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
+		$uporabnik2 = -1;
+		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali ne
 		
 		mysqli_query($db , $sql);
 		$id = mysqli_insert_id($db);
@@ -125,8 +114,8 @@ class Sah {
 		mysqli_query($db,$sql);
 		
 		$polje = Sah::toTable($fen_string);
-		return new Sah($polje);
-	}*/
+		return $id;
+	}
 	
 	public static function newGameVsFriend($friend_id){
 		$_SESSION["barva"] = "w";

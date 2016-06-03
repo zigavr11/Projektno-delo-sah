@@ -91,33 +91,38 @@ function previousMove(){
 </script>
 
 <?php
-	
-	$db = Db::getInstance();
-	if(isset($_GET["game_id"])){
-		$sql = "SELECT * FROM stanja WHERE stanja.tk_igra = ".$_GET["game_id"]."";
-		$result = mysqli_query($db,$sql);
-		echo "Replay ".$_GET["game_id"].": <br>";
-		while($row = mysqli_fetch_assoc($result)){
-			$list_potez[] = toTable($row["stanje"]);
-			
+	if(isset($_SESSION["id"])){
+		$db = Db::getInstance();
+		if(isset($_GET["game_id"])){
+			$sql = "SELECT * FROM stanja WHERE stanja.tk_igra = ".$_GET["game_id"]."";
+			$result = mysqli_query($db,$sql);
+			echo "Replay ".$_GET["game_id"].": <br>";
+			while($row = mysqli_fetch_assoc($result)){
+				$list_potez[] = toTable($row["stanje"]);
+				
+			}
+			echo "<script> var list = ".json_encode($list_potez).";</script>";
+			echo "<button onclick=\"startReplay(list)\" type=\"button\"> Play replay </button>";
+			echo "<button onclick=\"stopReplay()\" type=\"button\"> Stop replay </button>";
+			echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
+			echo "<button onclick=\"previousMove()\" type=\"button\"> Previous move </button>";
 		}
-		echo "<script> var list = ".json_encode($list_potez).";</script>";
-		echo "<button onclick=\"startReplay(list)\" type=\"button\"> Play replay </button>";
-		echo "<button onclick=\"stopReplay()\" type=\"button\"> Stop replay </button>";
-		echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
-		echo "<button onclick=\"previousMove()\" type=\"button\"> Previous move </button>";
+		else{
+			$sql = "SELECT * FROM igra WHERE igra.tk_uporabnik1 = ".$_SESSION["id"]." || igra.tk_uporabnik2 = ".$_SESSION["id"]."";
+			$result = mysqli_query($db,$sql);
+			$stevec = 1;
+			echo "Replays: <br>";
+			while($row = mysqli_fetch_assoc($result)){
+				echo "<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\">Igra".$row["id"]."</a><br>";
+				$list[] = $row["id"];
+				$stevec++;
+			}
+		}
 	}
 	else{
-		$sql = "SELECT * FROM igra WHERE igra.tk_uporabnik1 = ".$_SESSION["id"]." || igra.tk_uporabnik2 = ".$_SESSION["id"]."";
-		$result = mysqli_query($db,$sql);
-		$stevec = 1;
-		echo "Replays: <br>";
-		while($row = mysqli_fetch_assoc($result)){
-			echo "<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\">Igra".$stevec."</a><br>";
-			$list[] = $row["id"];
-			$stevec++;
-		}
+		echo "<div class=\"well well-sm\">Za ogled iger se morate vpisati.</div>";
 	}
+	
 	
 	function toTable($arg){
 		$fen = array();
