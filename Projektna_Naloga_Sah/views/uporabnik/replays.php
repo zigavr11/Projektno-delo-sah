@@ -1,8 +1,4 @@
 ﻿<script>
-var start = 0;
-var stop = 0;
-var next = 0;
-var previous = 0;
 var stevec = 0;
 var id;
 
@@ -32,23 +28,23 @@ function generatePolje(sah){
 				case "0": figureName=""; break;
 			}
 			if(total%2==0)  
-			{  
-				if(figureName != ""){
-					sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-				}
-				else {
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
-				}
-			}  
-			else  
-			{
-				if(figureName != ""){
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-				}
-				else{
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
-				}
-			} 
+				{  
+					if(figureName != ""){
+						sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+					}
+					else {
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#ffce9e> </td>";   
+					}
+				}  
+				else  
+				{
+					if(figureName != ""){
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+					}
+					else{
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47></td>"; 
+					}
+				} 
 			 
 		}	
 	sahovnica += "</tr>";
@@ -117,7 +113,7 @@ function previousMove(){
 		$stevec = 1;
 		echo "Replays: <br>";
 		while($row = mysqli_fetch_assoc($result)){
-			echo "<a href=\"?controller=uporabnik&action=pravila&game_id=".$row["id"]."\">Igra".$stevec."</a><br>";
+			echo "<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\">Igra".$stevec."</a><br>";
 			$list[] = $row["id"];
 			$stevec++;
 		}
@@ -154,7 +150,7 @@ function previousMove(){
 
 <?php
 	if(isset($_GET["game_id"])){
-		echo "<a href = \"http://localhost/sah/index.php?controller=uporabnik&action=pravila\" > Back </a>";
+		echo "<a href = \"http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=uporabnik&action=zgodovina\" > Back </a>";
 	}
 	
 ?>

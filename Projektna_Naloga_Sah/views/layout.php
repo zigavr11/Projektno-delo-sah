@@ -55,7 +55,8 @@
 		}
 		
 		table{
-			border-style: solid;
+			border-style:solid;
+			border-width:2px;
 			margin-top:5px;
 		}
 		
@@ -114,6 +115,7 @@
 					<li <?php if($controller=='index') echo "class=\"active\""?>><a href='?controller=strani&action=domov'>Domov</a></li>
 					<li <?php if($action=='profile') echo "class=\"active\""?>><a href='?controller=uporabnik&action=profile'>Profil</a></li>
 					<li <?php if($action=='pravila') echo "class=\"active\""?>><a href='?controller=uporabnik&action=pravila'>Pravila</a></li>
+					<li <?php if($action=='zgodovina') echo "class=\"active\""?>><a href='?controller=uporabnik&action=zgodovina'>Zgodovina iger</a></li>
 					<li><a href='?controller=sah&action=index'>Igraj</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
