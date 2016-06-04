@@ -135,7 +135,6 @@
 	function stopReplay(){
 		clearInterval(id);
 	}
-	
 </script>
 <style>
 .poteze{

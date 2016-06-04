@@ -1,7 +1,7 @@
 <?php
-require_once('views/sah/AlfaBeta.php');
+require_once('views/sah/AlfaBeta.php'); 
 	class SahController {
-	
+		
 		public function index() {
 			require_once('views/sah/index.php');
 		}
@@ -16,17 +16,21 @@ require_once('views/sah/AlfaBeta.php');
 			if(isset($_POST["ai"])){
 				$db = Db::getInstance();
 				$move = Sah::updatePolje($_POST["polje"], $_POST["row1"], $_POST["col1"], $_POST["row2"], $_POST["col2"], $_POST["figure"], $_POST["game_id"], $_POST["poteza"]);
+				if($move){
+					$sql = "SELECT i.id as game_id, i.stanje as stanje_igre, s.* FROM igra i, stanja s WHERE tk_igra = ".$_POST["game_id"]." AND i.id = tk_igra ORDER BY s.id DESC LIMIT 1";
+					$result = mysqli_query($db , $sql);
+					$row = mysqli_fetch_assoc($result);
+					$polje = Sah::toTable($row["stanje"]);
+					
+					$moveB = moveA(($_POST["row1"].$_POST["col1"].$_POST["row2"].$_POST["col2"])." ", $_POST["polje"]);
+					$move1 = Sah::updatePolje($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
+					
+					echo json_encode($move);
+				}
+				else{
+					echo json_encode($move);
+				} //
 				
-				$sql = "SELECT i.id as game_id, i.stanje as stanje_igre, s.* FROM igra i, stanja s WHERE tk_igra = ".$_POST["game_id"]." AND i.id = tk_igra ORDER BY s.id DESC LIMIT 1";
-				$result = mysqli_query($db , $sql);
-				$row = mysqli_fetch_assoc($result);
-				$polje = Sah::toTable($row["stanje"]);
-				
-				$moveB = moveA(($_POST["row1"].$_POST["col1"].$_POST["row2"].$_POST["col2"])." ");
-				echo $moveB;
-				$move1 = Sah::updatePolje($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
-				
-				echo json_encode($move);
 			}
 			else{
 				$move = Sah::updatePolje($_POST["polje"], $_POST["row1"], $_POST["col1"], $_POST["row2"], $_POST["col2"], $_POST["figure"], $_POST["game_id"], $_POST["poteza"]);

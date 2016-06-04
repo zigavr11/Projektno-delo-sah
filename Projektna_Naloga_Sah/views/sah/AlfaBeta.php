@@ -1,7 +1,6 @@
 <?php
 
-
-static $chessBoard = array(
+static $che = array(
     array("r","k","b","q","a","b","k","r"),
     array("p","p","p","p","p","p","p","p"),
     array(" "," "," "," "," "," "," "," "),
@@ -81,30 +80,32 @@ $globalDepth = 2;
 $beta = 1000000;
 $alpha = -1000000;
 
-while ("A" != $chessBoard[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
-while ("a" != $chessBoard[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
+while ("A" != $che[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
+while ("a" != $che[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
 
-function moveA($f_move){
-    global $chessBoard;
+function moveA($f_move, &$polje){
+	for($i=0; $i<8; $i++){
+		for($j=0; $j<8; $j++)
+		{
+			if($polje[$i][$j] == "0"){
+				$polje[$i][$j] = " ";
+			}
+		}
+	}
+	
     global $whiteKingPosition;
     global $globalDepth;
 	
-	echo "\nfdasfdas".$f_move."---";
-//beli igrac
-	ChangeBoard($chessBoard);
-    moveForward($f_move, $chessBoard, $whiteKingPosition);
-//racunalnik
-    $move = alphaBeta($globalDepth, 1000000, -1000000, "", 0, $chessBoard, $whiteKingPosition);
-    moveForward($move, $chessBoard, $whiteKingPosition);
-	ChangeBoard($chessBoard);
-	
+    moveForward($f_move, $polje, $whiteKingPosition);
+    $move = alphaBeta($globalDepth, 1000000, -1000000, "", 0, $polje, $whiteKingPosition);
+    moveForward($move, $polje, $whiteKingPosition);
+
 	return $move;
 }
 
 
 function moveForward($move, &$chessBoard, &$whiteKingPosition) {
-    if ($move[4] != 'P') { // if it wasn't a pawn promotion
-
+     if ($move[4] != 'P') { //
         $chessBoard[intval($move[2])][intval($move[3])]=$chessBoard[intval($move[0])][intval($move[1])];
         $chessBoard[intval($move[0])][intval($move[1])]=" ";
 
@@ -135,7 +136,7 @@ function moveBackwards($move, &$chessBoard, &$whiteKingPosition) {
     }
 }
 
-function alphaBeta($depth, $beta, $alpha, $move, $player, $chessBoard, $whiteKingPosition) {
+function alphaBeta($depth, $beta, $alpha, $move, $player, &$chessBoard, $whiteKingPosition) { //
     //returns x1y1x2y2f12345
     //player 0=min, 1=max
     global $globalDepth;
@@ -148,7 +149,6 @@ function alphaBeta($depth, $beta, $alpha, $move, $player, $chessBoard, $whiteKin
         $player=1-$player;//1 or 0
         for ($i=0; $i<strlen($listaPotez); $i+=5) {
         moveForward(substr($listaPotez, $i,5), $chessBoard, $whiteKingPosition);
-
         $chessBoard = ChangeBoard($chessBoard);
         $returnString = alphaBeta($depth-1, $beta, $alpha, substr($listaPotez, $i,5), $player, $chessBoard, $whiteKingPosition);
         $value=intval(substr($returnString,5));
