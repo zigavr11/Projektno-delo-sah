@@ -1,14 +1,14 @@
 <?php
 
 static $che = array(
-    array("r","n","b","q","k","b","n","r"),
+    array("r","k","b","q","a","b","k","r"),
     array("p","p","p","p","p","p","p","p"),
     array(" "," "," "," "," "," "," "," "),
     array(" "," "," "," "," "," "," "," "),
     array(" "," "," "," "," "," "," "," "),
     array(" "," "," "," "," "," "," "," "),
     array("P","P","P","P","P","P","P","P"),
-    array("R","N","B","Q","K","B","N","R"));
+    array("R","K","B","Q","A","B","K","R"));
 
 static $pawnHeuristics = array(
     array( 0,  0,  0,  0,  0,  0,  0,  0),
@@ -80,8 +80,8 @@ $globalDepth = 2;
 $beta = 1000000;
 $alpha = -1000000;
 
-while ("K" != $che[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
-while ("k" != $che[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
+while ("A" != $che[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
+while ("a" != $che[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
 
 function moveA($f_move, &$polje){
 	for($i=0; $i<8; $i++){
@@ -268,7 +268,7 @@ function posibleMoves($chessBoard, $whiteKingPosition) {
             case "R":
                 $list = $list.posibleR($i, $chessBoard, $whiteKingPosition);
                 break;
-            case "N":
+            case "K":
                 $list = $list.posibleK($i, $chessBoard, $whiteKingPosition);
                 break;
             case "B":
@@ -277,7 +277,7 @@ function posibleMoves($chessBoard, $whiteKingPosition) {
             case "Q":
                 $list = $list.posibleQ($i, $chessBoard, $whiteKingPosition);
                 break;
-            case "K":
+            case "A":
                 $list = $list.posibleA($i, $chessBoard, $whiteKingPosition);
                 break;
         }
@@ -311,7 +311,7 @@ function posibleP($i, &$chessBoard, &$whiteKingPosition)
         try {//promotion && capture
             if(isset($chessBoard[$r - 1][$c + $j])) {
                 if (ctype_lower($chessBoard[$r - 1][$c + $j]) && $i < 16) {
-                    $temp = array("Q", "R", "B", "N");# {"Q","R","B","N"};
+                    $temp = array("Q", "R", "B", "K");# {"Q","R","B","K"};
                     for ($k = 0; $k < 4; $k++) {
                         $oldPiece = $chessBoard[intval($r - 1)][$c + $j];
                         $chessBoard[intval($r)][$c] = " ";
@@ -345,7 +345,7 @@ function posibleP($i, &$chessBoard, &$whiteKingPosition)
         try {//promotion && no capture
             if(isset($chessBoard[intval($r - 1)][$c])) {
                 if (" " == $chessBoard[intval($r - 1)][$c] && $i < 16) {
-                    $temp = array("Q", "R", "B", "N");
+                    $temp = array("Q", "R", "B", "K");
                     for ($k = 0; $k < 4; $k++) {
                         $oldPiece = $chessBoard[intval($r - 1)][$c];
                         $chessBoard[intval($r)][$c] = " ";
@@ -397,7 +397,7 @@ function posibleK($i, &$chessBoard, &$whiteKingPosition)
                         if (kingSafe($chessBoard, $whiteKingPosition)) {
                             $list = $list . $r . $c . ($r + $j) . ($c + $k * 2) . $oldPiece;
                         }
-                        $chessBoard[intval($r)][$c] = "N";
+                        $chessBoard[intval($r)][$c] = "K";
                         $chessBoard[intval($r + $j)][$c + $k * 2] = $oldPiece;
                     }
 
@@ -411,7 +411,7 @@ function posibleK($i, &$chessBoard, &$whiteKingPosition)
                         if (kingSafe($chessBoard, $whiteKingPosition)) {
                             $list = $list . $r . $c . ($r + $j * 2) . ($c + $k) . $oldPiece;
                         }
-                        $chessBoard[intval($r)][$c] = "N";
+                        $chessBoard[intval($r)][$c] = "K";
                         $chessBoard[intval($r + $j * 2)][$c + $k] = $oldPiece;
                     }
                 }
@@ -595,13 +595,13 @@ function posibleA($i, &$chessBoard, &$whiteKingPosition) {
                     if (ctype_lower($chessBoard[intval($r - 1 + $j / 3)][intval($c - 1 + $j % 3)]) || " " == $chessBoard[intval($r - 1 + $j / 3)][intval($c - 1 + $j % 3)]) {
                         $oldPiece = $chessBoard[intval($r - 1 + $j / 3)][intval($c - 1 + $j % 3)];
                         $chessBoard[intval($r)][$c] = " ";
-                        $chessBoard[intval($r - 1 + $j / 3)][$c - 1 + $j % 3] = "K";
+                        $chessBoard[intval($r - 1 + $j / 3)][$c - 1 + $j % 3] = "A";
                         $kingTemp = $whiteKingPosition;
                         $whiteKingPosition = $i + ($j / 3) * 8 + $j % 3 - 9;
                         if (kingSafe($chessBoard, $whiteKingPosition)) {
                             $list = $list . $r . $c . intval(($r - 1 + $j / 3)) . intval(($c - 1 + $j % 3)) . $oldPiece;
                         }
-                        $chessBoard[intval($r)][$c] = "K";
+                        $chessBoard[intval($r)][$c] = "A";
                         $chessBoard[intval($r - 1 + $j / 3)][$c - 1 + $j % 3] = $oldPiece;
                         $whiteKingPosition = $kingTemp;
                     }
@@ -667,14 +667,14 @@ function kingSafe(&$chessBoard, &$whiteKingPosition)
         for ($j=-1; $j<=1; $j+=2) {
             try {
                 if(isset($chessBoard[intval($whiteKingPosition/8+$i)][$whiteKingPosition%8+$j*2])){
-                    if ("n" == $chessBoard[intval($whiteKingPosition/8+$i)][$whiteKingPosition%8+$j*2]) {
+                    if ("k" == $chessBoard[intval($whiteKingPosition/8+$i)][$whiteKingPosition%8+$j*2]) {
                         return false;
                     }
                 }
             } catch (Exception $e) {}
             try {
                 if (isset($chessBoard[intval($whiteKingPosition / 8 + $i * 2)][$whiteKingPosition % 8 + $j])){
-                    if ("n" == $chessBoard[intval($whiteKingPosition / 8 + $i * 2)][$whiteKingPosition % 8 + $j]) {
+                    if ("k" == $chessBoard[intval($whiteKingPosition / 8 + $i * 2)][$whiteKingPosition % 8 + $j]) {
                         return false;
                     }
                 }
@@ -703,7 +703,7 @@ function kingSafe(&$chessBoard, &$whiteKingPosition)
                 if ($i!=0 || $j!=0) {
                     try {
                         if(isset($chessBoard[intval($whiteKingPosition/8+$i)][$whiteKingPosition%8+$j])) {
-                            if ("k" == $chessBoard[intval($whiteKingPosition / 8 + $i)][$whiteKingPosition % 8 + $j]) {
+                            if ("a" == $chessBoard[intval($whiteKingPosition / 8 + $i)][$whiteKingPosition % 8 + $j]) {
                                 return false;
                             }
                         }
@@ -780,7 +780,7 @@ $counter=0;
             }
         }
     $whiteKingPosition=$tempPositionC;
-        if (!kingSafe($chessBoard, $whiteKingPosition)) {$counter -= 200000;}
+        if (!kingSafe($chessBoard, $whiteKingPosition)) {$counter -= 200;}
         return $counter/2;
     }
 

@@ -184,6 +184,11 @@ class Sah {
 		return $list;
 	}
 	
+	public static function deleteGame($id){
+		$db = Db::getInstance();
+		$sql = "DELETE FROM igra WHERE igra.id = \"$id\"";
+		mysqli_query($db , $sql);
+	}
 	public static function Rook($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		if(Sah::preglejVrsto($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
 		if(Sah::preglejStolpec($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }

@@ -12,6 +12,7 @@
 		<script src="main.js"></script>
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script src="http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.js"
+		<link href="https://fonts.googleapis.com/css?family=Exo:400,500" rel="stylesheet" type="text/css">
 		type="text/javascript"></script>
 
 		<style type="text/css">
@@ -45,9 +46,11 @@
 		</script>
 	</head>
 	<style>
+		
 		.navbar {
 			margin-bottom: 0;
 			border-radius: 0;
+
 		}
 		
 		mainnav{
@@ -84,6 +87,7 @@
 			padding-top: 20px;
 			background-color: #f1f1f1;
 			height: 100%;
+			
 		}
 
 		footer {
@@ -107,33 +111,7 @@
 			cursor: default;
 		}
 		
-		.btn-outlined {
-			border-radius: 0;
-			-webkit-transition: all 0.3s;
-			   -moz-transition: all 0.3s;
-					transition: all 0.3s;
-		}
 		
-		.btn-outlined.btn-info {
-			background: none;
-			border: 3px solid #222222;
-			color: black;
-			height:150px;
-			width:150px;
-		}
-		.btn-outlined.btn-info:hover,
-		.btn-outlined.btn-info:active {
-			color: #FFF;
-			background: #222222;
-			height:150px;
-			width:150px;
-		}
-		
-		.game{
-			float:left;
-			margin-left:5px;
-			margin-top:5px;
-		}
 	</style>
 	<body>
   

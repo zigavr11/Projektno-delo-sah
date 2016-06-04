@@ -137,8 +137,7 @@
 	}
 </script>
 <style>
-.poteze{
-}
+
 .align{
 	text-align:center;
 }
@@ -156,7 +155,7 @@ pravila{
 
 	<div id="0" class="rook align">
 		<div class="rook_description well well-sm"> Poteze ki jih lahko naredi trdnjava. </div>
-		<div id="rook" class="0 layout row">
+		<div id="rook" class="0 layout row well well-sm">
 				<div class="col-md-6">
 					<img class="pravila" height="297px" width="296px" src="images/Chess_Moves/possibleRookMoves.jpg" />
 				</div>
@@ -171,7 +170,7 @@ pravila{
 	
 	<div id="1" class="bishop align" style="display:none">
 		<div class="bishop_description well well-sm"> Poteze ki jih lahko naredi tekač. </div>
-		<div id="bishop" class="1 layout row">
+		<div id="bishop" class="1 layout row well well-sm">
 			<div class="col-md-6">
 				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleBishopMoves.jpg" />
 			</div>
@@ -185,7 +184,7 @@ pravila{
 	
 	<div id="2" class="knight align" style="display:none">
 		<div class="knight_description well well-sm"> Poteze ki jih lahko naredi konj. </div>
-		<div id="knight" class="2 layout row">
+		<div id="knight" class="2 layout row well well-sm">
 			<div class="col-md-6">
 				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleKnightMoves.jpg" />
 			</div>
@@ -199,7 +198,7 @@ pravila{
 	
 	<div id="3" class="queen align" style="display:none">
 		<div class="queen_description well well-sm"> Poteze ki jih lahko naredi kraljica. </div>
-		<div id="queen" class="3 layout row">
+		<div id="queen" class="3 layout row well well-sm">
 			<div class="col-md-6">
 				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleQueenMoves.jpg" />
 			</div>
@@ -213,7 +212,7 @@ pravila{
 	
 	<div id="4" class="king align" style="display:none">
 		<div class="king_description well well-sm"> Poteze ki jih lahko naredi kralj. </div>
-		<div id="king" class="4 layout row">
+		<div id="king" class="4 layout row well well-sm">
 			<div class="col-md-6">
 				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possibleKingMoves.jpg" />
 			</div>
@@ -227,7 +226,7 @@ pravila{
 	
 	<div id="5" class="pawn align" style="display:none">
 		<div class="pawn_description well well-sm"> Poteze ki jih lahko naredi kmet. </div>
-		<div id="pawn" class="5 layout row">
+		<div id="pawn" class="5 layout row well well-sm">
 			<div class="col-md-6">
 				<img class="pravila" height="300px" width="300px" src="images/Chess_Moves/possiblePawnMoves.jpg" />
 			</div>
@@ -238,7 +237,7 @@ pravila{
 			</div>
 		</div>
 	</div> 
-		
+	
 	<div align="right" class="col-md-6">
 		<button class="previous"> Previous</button>
 	</div>

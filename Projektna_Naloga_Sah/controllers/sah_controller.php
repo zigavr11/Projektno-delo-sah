@@ -51,6 +51,9 @@ require_once('views/sah/AlfaBeta.php');
 			echo json_encode($Sah);
 		}
 		
+		public function deleteGame(){
+			Sah::deleteGame($_POST["id"]);
+		}
 		public function vrniAktivneIgre(){
 			$igre = Sah::returnActiveGames();
 			echo json_encode($igre);
