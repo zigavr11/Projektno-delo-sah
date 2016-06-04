@@ -5,6 +5,7 @@ class Sah {
 	public $check;
 	public $friendly_check;
 	public $stanje_igre;
+	public $kingPosition;
 	
 	public function __construct($polje) {
 		$this->polje = $polje;
@@ -528,7 +529,20 @@ class Sah {
 			return false;
 		}
 	}
-	
+	public static function updatePoljeHardMove($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
+		$c = 0;
+		$db = Db::getInstance();
+		$polje[$row1][$col1] = "0";
+		$polje[$row2][$col2] = $figure;
+		$fen_string = Sah::generate2DBoard($polje);
+		if($poteza == "w")
+			$poteza = "b";
+		else
+			$poteza = "w";
+		$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
+		mysqli_query($db,$sql);
+		
+	}
 	public static function preglejDiagonalo1($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
 		$move = false;
@@ -1057,7 +1071,7 @@ class Sah {
 	}
 	
 	public static function getFriendlyKingPosition($side, $polje){
-		
+		echo json_encode($polje);
 		$pos = "";
 		for($x = 0; $x < 8; $x++){
 			for($y = 0; $y < 8; $y++){
@@ -1076,6 +1090,9 @@ class Sah {
 		return $pos;
 	}
 	
+	public static function AlfaBeta(){
+		
+	}
   }
   
   

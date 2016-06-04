@@ -8,6 +8,7 @@ var Click = 0;
 var newData = false;
 var poteza;
 var check;
+var kingPosition;
 var sah;
 $(document).ready(function(){
 	
@@ -60,7 +61,7 @@ $(document).ready(function(){
 						$.ajax({
 							type: "POST",
 							url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=move",
-							data: {"polje":sah,"row1":row1,"row2":row2,"col1":col1,"col2":col2,"figure":figure,"game_id":game_id,"poteza":poteza},
+							data: {"polje":sah,"row1":row1,"row2":row2,"col1":col1,"col2":col2,"figure":figure,"game_id":game_id,"poteza":poteza,"ai":1},
 							success:function(data){
 								if(!JSON.parse(data)){
 									generatePolje();
@@ -76,7 +77,20 @@ $(document).ready(function(){
 					}
 				}	
 			}
-		} //else {function AI()}
+		} 
+		/*else{
+			$.ajax({
+				type: "POST",
+				url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=AlfaBeta",
+				data: {"polje":sah, "kingPosition":kingPosition},
+				success:function(data){
+					
+				},
+				error:function(error){
+					console.log(error);
+				}
+			})
+		}*/
 	});
 	setInterval(function(){
 		getBoard();
