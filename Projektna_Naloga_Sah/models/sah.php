@@ -189,6 +189,7 @@ class Sah {
 		$sql = "DELETE FROM igra WHERE igra.id = \"$id\"";
 		mysqli_query($db , $sql);
 	}
+	
 	public static function Rook($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		if(Sah::preglejVrsto($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
 		if(Sah::preglejStolpec($polje, $row1, $col1, $row2, $col2, $side, $figure)){ return true; }
@@ -548,6 +549,7 @@ class Sah {
 		mysqli_query($db,$sql);
 		
 	}
+	
 	public static function preglejDiagonalo1($polje, $row1, $col1, $row2, $col2, $side, $figure){
 		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
 		$move = false;
@@ -1074,7 +1076,9 @@ class Sah {
 		}
 		return $pos;
 	}
-	
+	public static function checkForCheckMate(){
+		
+	}
 	public static function getFriendlyKingPosition($side, $polje){
 		echo json_encode($polje);
 		$pos = "";
@@ -1095,9 +1099,6 @@ class Sah {
 		return $pos;
 	}
 	
-	public static function AlfaBeta(){
-		
-	}
   }
   
   

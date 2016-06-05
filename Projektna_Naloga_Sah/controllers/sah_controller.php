@@ -23,7 +23,7 @@ require_once('views/sah/AlfaBeta.php');
 					$polje = Sah::toTable($row["stanje"]);
 					
 					$moveB = moveA(($_POST["row1"].$_POST["col1"].$_POST["row2"].$_POST["col2"])." ", $_POST["polje"]);
-					$move1 = Sah::updatePolje($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
+					$move1 = Sah::updatePoljeHardMove($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
 					
 					echo json_encode($move);
 				}

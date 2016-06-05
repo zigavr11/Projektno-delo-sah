@@ -74,16 +74,20 @@ static $kingHeuristicsEndGame = array(
     array(-30,-30,  0,  0,  0,  0,-30,-30),
     array(-50,-30,-30,-30,-30,-30,-30,-50));
 
-$whiteKingPosition=0;
-$blackKingPosition=0;
+
 $globalDepth = 2;
 $beta = 1000000;
 $alpha = -1000000;
 
-while ("K" != $che[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
-while ("k" != $che[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
+
 
 function moveA($f_move, &$polje){
+	$whiteKingPosition = 0;
+	$blackKingPosition = 0;
+	
+	while ("K" != $polje[intval($whiteKingPosition/8)][$whiteKingPosition%8]) {$whiteKingPosition++;}
+	while ("k" != $polje[intval($blackKingPosition/8)][$blackKingPosition%8]) {$blackKingPosition++;}
+
 	for($i=0; $i<8; $i++){
 		for($j=0; $j<8; $j++)
 		{
@@ -93,7 +97,6 @@ function moveA($f_move, &$polje){
 		}
 	}
 	
-    global $whiteKingPosition;
     global $globalDepth;
 	
     moveForward($f_move, $polje, $whiteKingPosition);
