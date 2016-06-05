@@ -189,9 +189,8 @@
 							$result = mysqli_query($db,"SELECT * FROM uporabnik, prijatelji WHERE uporabnik.id = id_prijatelja AND id_uporabnika = ".$_SESSION["id"]."");
 			
 							while($row = mysqli_fetch_assoc($result)){
-								
 								$sql = "SELECT * FROM izziv WHERE (id_uporabnika = ".$_SESSION["id"]." || id_uporabnika = ".$row["id"].") AND (id_prijatelja = ".$row["id"]." || id_prijatelja = ".$_SESSION["id"].")";
-								$res = mysqli_query($db, $sql);
+								$res = mysqli_query($db, $sql);	
 								if(mysqli_num_rows($res) == 0){
 									echo "<div class=\"panel-body well well-sm\">".$row["uporabnisko_ime"]."
 									<button type=\"button\" id=\"".$row["id"]."\" class=\"btn btn-primary btn-xs glyphicon glyphicon-play friend_play\"></button>

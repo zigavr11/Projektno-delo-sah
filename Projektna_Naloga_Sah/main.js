@@ -124,11 +124,11 @@ function vrniAktivneIgre(){
 function deleteGame(id){
 	$.ajax({
 		type: "POST",
-		url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=deleteGame",
+		url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=deleteGame",
 		data: {"id":id},
 		success:function(data){
-			console.log(data);
-			location.reload();
+			var id = JSON.parse(data);
+			$("#game_"+id).hide();
 		},
 		error:function(error){
 			console.log(error);

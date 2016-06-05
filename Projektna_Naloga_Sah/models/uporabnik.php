@@ -96,7 +96,7 @@
 			$result = mysqli_query($db,"SELECT * FROM izziv, uporabnik WHERE id_uporabnika = uporabnik.id AND id_prijatelja = \"".$_SESSION["id"]."\"");
 		
 			while($row = mysqli_fetch_assoc($result)){
-				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
+				$list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 			}
 			return $list;
 		}

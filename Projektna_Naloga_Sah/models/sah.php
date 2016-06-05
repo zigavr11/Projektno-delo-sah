@@ -188,6 +188,7 @@ class Sah {
 		$db = Db::getInstance();
 		$sql = "DELETE FROM igra WHERE igra.id = \"$id\"";
 		mysqli_query($db , $sql);
+		echo $id;
 	}
 	
 	public static function Rook($polje, $row1, $col1, $row2, $col2, $side, $figure){
@@ -524,6 +525,9 @@ class Sah {
 			else
 				$poteza = "w";
 			if($check){
+				if(Sah::checkForCheckMate($polje, $k_Row, $k_Col, $row2, $col2, $side, $figure)){
+					Sah::endGame($game_id, -1);
+				}
 				$c = 1;
 			}
 			$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
@@ -979,6 +983,8 @@ class Sah {
 			return true;
 		}
 	}
+	
+	
 	public static function checkForCheck($polje, $side, $figure){
 		$check = false;
 		$pos = Sah::getFriendlyKingPosition($side, $polje);
@@ -1076,9 +1082,6 @@ class Sah {
 		}
 		return $pos;
 	}
-	public static function checkForCheckMate(){
-		
-	}
 	public static function getFriendlyKingPosition($side, $polje){
 		echo json_encode($polje);
 		$pos = "";
@@ -1097,6 +1100,221 @@ class Sah {
 			}
 		}
 		return $pos;
+	}
+	
+	//CheckMate stuff
+	public static function checkFriendlyMoves($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		//echo "bla";
+		if($row2 < 0 || $col2 < 0 || $row2 > 7 || $col2 > 7){
+			return false;
+		}
+		else{
+			if($polje[[$row2][$col2]] == '0'){
+				$temp = $polje[[$row1][$col1]];
+				$polje[[$row1][$col1]] = "0";
+				$polje[$row2 * 8 + $col2] = $temp;
+				if(Sah::checkForCheck($polje, $side, $figure)){
+					return false;
+				}
+				else
+					return true;
+			}
+			else
+				return false;
+		}
+	}
+	
+	public static function checkForCheckMate($polje1, $row1, $col1, $row2, $col2, $side, $figure){ //Row3 in col2 je pozicija figure ki napada kralja
+		//Pregleda ce se lahko kralj premakne na katerokoli polje okrog sebe, ce se lahko moramo pregledati ce je na tisti poziciji sah ce ni pomeni da ni sah mat
+		$side = $side * (-1);
+		$x = 0;
+		$y = 0;
+		$sahMat = true;
+		if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1-1, $side, $figure)){ //Ce se poteza lahko izvede vrne true
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1, $col1-1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1-1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		
+		if($row2 - $row1 == 0){ //Vrsta
+			if($col2 - $col1 < 0){
+				//row++
+				$x = 0;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row--
+				$x = 0;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else if($col2 - $col1 == 0){ //Stolpec
+			if($row2 - $row1 < 0){
+				//col++
+				$x = 1;
+				$y = 0;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//col--
+				$x = -1;
+				$y = 0;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else if(($col2 - $col1) < 0 && ($row2 - $row1) < 0 || ($col2 - $col1) > 0 && ($row2 - $row1) > 0){
+			if(($col2 - $col1) < 0){
+				//row1++
+				//col1++
+				$x = 1;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row1--
+				//col1--
+				$x = -1;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else{
+			if(($col2 - $col1) < 0){
+				//row1--
+				//col1++
+				$x = -1;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row1++
+				//col1--
+				$x = 1;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		return $sahMat;
+	}
+	
+	public static function checkAllPosibleMoves($polje, $row1, $col1, $row2, $col2, $DELIX, $DELIY, $side){
+		$mate = false;
+		$side = $side * (-1);
+		
+		while(true){
+			if($row2 == $row1 && $col2 == $col1){
+				break;
+			}
+			if($side == -1){
+				for($x = 0; $x < 8; $x++){
+					for($y = 0; $y < 8; $y++){	
+						$figure = $polje[$x][$y];
+						switch($polje[$x][$y]){
+							//White player
+							case "r":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "b":
+								if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "q":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){  $mate = true; }
+								else if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "n":
+								if(Sah::sahKnight($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "p":
+								if(Sah::sahPawn($polje, $x, $y, $row2, $col2, $side, $figure)) { $mate = true; }
+							break;
+						}
+					}
+					if($mate){
+						break;
+					}
+				}
+			}
+			else{
+				for($x = 0; $x < 8; $x++){
+					for($y = 0; $y < 8; $y++){
+						$figure = $polje[$x][$y];
+						switch($polje[$x][$y]){
+							//Black player
+							case "R":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "B":
+								if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){$mate = true; }
+							break;
+							case "Q":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "N":
+								if(Sah::sahKnight($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "P":
+								if(Sah::sahPawn($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+						}
+					}
+					if($mate){
+						break;
+					}
+				}
+			}
+			if($mate)
+				break;
+			
+			$row2 = $row2 + $DELIX;
+			$col2 = $col2 + $DELIY;
+		}
+		return $mate;
 	}
 	
   }

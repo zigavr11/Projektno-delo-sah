@@ -129,7 +129,7 @@ function previousMove(){
 					</div>";
 				}
 				else{
-					echo "<div class=\"gametest well well-sm\">
+					echo "<div id=\""."game_".$row["id"]."\" class=\"gametest well well-sm\">
 					<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\" class=\"btn btn-outlined btn-info\">Igra".$row["id"]."<br> St potez: ".$row1["count(stanja.tk_igra)"]."</a>
 					<button onclick=\"deleteGame(".$row["id"].")\" style=\"margin-top:2px\" class=\"btn btn-danger\"><span class=\"glyphicon glyphicon-remove\"></span></button>
 					</div>";
