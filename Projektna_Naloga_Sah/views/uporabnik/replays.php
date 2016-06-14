@@ -1,8 +1,5 @@
-﻿<script>
-var start = 0;
-var stop = 0;
-var next = 0;
-var previous = 0;
+﻿
+<script>
 var stevec = 0;
 var id;
 
@@ -32,23 +29,23 @@ function generatePolje(sah){
 				case "0": figureName=""; break;
 			}
 			if(total%2==0)  
-			{  
-				if(figureName != ""){
-					sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-				}
-				else {
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
-				}
-			}  
-			else  
-			{
-				if(figureName != ""){
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-				}
-				else{
-					sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
-				}
-			} 
+				{  
+					if(figureName != ""){
+						sahovnica += "<td id=\""+x+y+figureChar+"\" bgcolor=#ffce9e> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+					}
+					else {
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#ffce9e> </td>";   
+					}
+				}  
+				else  
+				{
+					if(figureName != ""){
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
+					}
+					else{
+						sahovnica += "<td id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#d18b47></td>"; 
+					}
+				} 
 			 
 		}	
 	sahovnica += "</tr>";
@@ -92,36 +89,62 @@ function previousMove(){
 	}
 }
 
+
 </script>
 
 <?php
-	
-	$db = Db::getInstance();
-	if(isset($_GET["game_id"])){
-		$sql = "SELECT * FROM stanja WHERE stanja.tk_igra = ".$_GET["game_id"]."";
-		$result = mysqli_query($db,$sql);
-		echo "Replay ".$_GET["game_id"].": <br>";
-		while($row = mysqli_fetch_assoc($result)){
-			$list_potez[] = toTable($row["stanje"]);
+	if(isset($_SESSION["id"])){
+		$db = Db::getInstance();
+		if(isset($_GET["game_id"])){
+			$sql = "SELECT * FROM stanja WHERE stanja.tk_igra = ".$_GET["game_id"]."";
+			$result = mysqli_query($db,$sql);
+			echo "Replay ".$_GET["game_id"].": <br>";
+			while($row = mysqli_fetch_assoc($result)){
+				$list_potez[] = toTable($row["stanje"]);
+				
+			}
+			echo "<script> var list = ".json_encode($list_potez).";</script>";
+			echo "<button onclick=\"startReplay(list)\" type=\"button\"> Play replay </button>";
+			echo "<button onclick=\"stopReplay()\" type=\"button\"> Stop replay </button>";
+			echo "<button onclick=\"previousMove()\" type=\"button\"> Previous move </button>";
+			echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
 			
 		}
-		echo "<script> var list = ".json_encode($list_potez).";</script>";
-		echo "<button onclick=\"startReplay(list)\" type=\"button\"> Play replay </button>";
-		echo "<button onclick=\"stopReplay()\" type=\"button\"> Stop replay </button>";
-		echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
-		echo "<button onclick=\"previousMove()\" type=\"button\"> Previous move </button>";
-	}
-	else{
-		$sql = "SELECT * FROM igra WHERE igra.tk_uporabnik1 = ".$_SESSION["id"]." || igra.tk_uporabnik2 = ".$_SESSION["id"]."";
-		$result = mysqli_query($db,$sql);
-		$stevec = 1;
-		echo "Replays: <br>";
-		while($row = mysqli_fetch_assoc($result)){
-			echo "<a href=\"?controller=uporabnik&action=pravila&game_id=".$row["id"]."\">Igra".$stevec."</a><br>";
-			$list[] = $row["id"];
-			$stevec++;
+		else{
+			$sql = "SELECT * FROM igra WHERE igra.tk_uporabnik1 = ".$_SESSION["id"]." || igra.tk_uporabnik2 = ".$_SESSION["id"]."";
+			$result = mysqli_query($db,$sql);
+			$stevec = 1;
+			
+			echo "<div align=\"center\" class=\"rook_description well well-sm\">Replays: </div><br>";
+			echo "<div class=\"games\">";
+			while($row = mysqli_fetch_assoc($result)){
+				$sql = "SELECT count(stanja.tk_igra) FROM stanja WHERE stanja.tk_igra = ".$row["id"]."";
+				$res = mysqli_query($db, $sql);
+				$row1 =mysqli_fetch_assoc($res);
+				
+				//echo "<div class=\"game well well-sm\"><a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\" class=\"btn btn-outlined btn-info\">Igra".$row["id"]."</a></div>";
+				if($row["id"] == 21){
+					echo "<div class=\"gametest well well-sm\">
+					<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\" class=\"btn btn-outlined btn-info\">Igra".$row["id"]."<br> St potez: ".$row1["count(stanja.tk_igra)"]."</a>
+					</div>";
+				}
+				else{
+					echo "<div id=\""."game_".$row["id"]."\" class=\"gametest well well-sm\">
+					<a href=\"?controller=uporabnik&action=zgodovina&game_id=".$row["id"]."\" class=\"btn btn-outlined btn-info\">Igra".$row["id"]."<br> St potez: ".$row1["count(stanja.tk_igra)"]."</a>
+					<button onclick=\"deleteGame(".$row["id"].")\" style=\"margin-top:2px\" class=\"btn btn-danger\"><span class=\"glyphicon glyphicon-remove\"></span></button>
+					</div>";
+				}
+				
+				$list[] = $row["id"];
+				$stevec++;
+			}
+			echo "</div>";
 		}
 	}
+	else{
+		echo "<div class=\"well well-sm\">Za ogled iger se morate vpisati.</div>";
+	}
+	
 	
 	function toTable($arg){
 		$fen = array();
@@ -151,15 +174,58 @@ function previousMove(){
 <table class="sahovnica" id="sahovnica"> 
 
 </table>
+<style>
+	.gametest{
+		width:150px;
+		height:150px;
+		text-align:right;
+		float:left;
+		margin-left:5px;
+		margin-top:5px; 
+	}
+	.btn-outlined {
+		border-radius: 0;
+		-webkit-transition: all 0.3s;
+		   -moz-transition: all 0.3s;
+				transition: all 0.3s;
+	}
+	
+	.btn-outlined.btn-info {
+		background: none;
+		border: 3px solid #222222;
+		color: black;
+		height:100px;
+		width:130px;
+	}
+	.btn-outlined.btn-info:hover,
+	.btn-outlined.btn-info:active {
+		color: #FFF;
+		background: #222222;
+		height:100px;
+		width:130px;
+	}
+	
+	.game{
+		
+	}
+	
+	.btn-danger{
+		padding:6px 6px;
+	}
+</style>
+<!--<div class="gametest well well-sm">
+	<a href=\"#" class="btn btn-outlined btn-info">Igra</a>
+	<button id="" style="margin-top:2px" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+	 <i class="icon-user icon-white"></i>
+</div>-->
 
 <?php
 	if(isset($_GET["game_id"])){
-		echo "<a href = \"http://localhost/sah/index.php?controller=uporabnik&action=pravila\" > Back </a>";
+		echo "<a style=\"margin-top:2px\" class=\"btn btn-default\" href = \"http://164.8.230.124/sah/index.php?controller=uporabnik&action=zgodovina\" > Back </a>";
+		echo "<script> generatePolje(list[stevec]); </script>";
 	}
 	
 ?>
-
-
 
 
 

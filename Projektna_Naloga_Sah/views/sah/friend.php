@@ -1,3 +1,5 @@
+<script src="views/sah/generateBoard.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script>
 <?php 
 	echo "var game_id = ".$_GET["game_id"].";";
@@ -10,16 +12,16 @@
 	echo "var player_turn = \"".$move."\";"; 
 ?>
 var Click = 0;
-var newData = false;
 var poteza;
 var check;
 var sah;
+var id;
 $(document).ready(function(){
 	
 	$("#predaj").on("click", function(){
 		$.ajax({
 			type: "POST",
-			url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=endGame",
+			url: "http://164.8.230.124/sah/index.php?controller=sah&action=endGame",
 			data: {"game_id":game_id, "forfeit":1},
 			success:function(data){
 				//window.reload();
@@ -64,7 +66,7 @@ $(document).ready(function(){
 						console.log(" Row 1: " + row1 + " Col 1: " + col1 + " Row 2: " + row2 + " Col 2: " + col2 + " Figure: " + figure );
 						$.ajax({
 							type: "POST",
-							url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=move",
+							url: "http://164.8.230.124/sah/index.php?controller=api&action=move",
 							data: {"polje":sah,"row1":row1,"row2":row2,"col1":col1,"col2":col2,"figure":figure,"game_id":game_id,"poteza":poteza},
 							success:function(data){
 								if(!JSON.parse(data)){
@@ -81,40 +83,48 @@ $(document).ready(function(){
 					}
 				}	
 			}
-		} //else {Koda za AI}
+		} //else {function AI()}
 	});
-	setInterval(function(){
+	id = setInterval(function(){
 		getBoard();
-	}, 2000);
+	}, 500);
 });
 
 function getBoard(){
 	$.ajax({
 		type: "POST",
-		url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=vrniStanjeIgre",
+		url: "http://164.8.230.124/sah/index.php?controller=api&action=vrniStanjeIgre",
 		data: {"game_id":game_id},
 		success:function(data){
 			console.log(data);
 			var changed = JSON.parse(data).polje;
+			var mate = JSON.parse(data).check_mate;
+			if(JSON.parse(data).check == 1) 
+				document.getElementById("check").innerHTML = "Check!";
+			else
+				document.getElementById("check").innerHTML = "No check.";
+			if(poteza == "w")
+				document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
+			else
+				document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
+			if(mate == 1)
+				document.getElementById("mate").innerHTML = "Checkmate!";
+			else
+				document.getElementById("mate").innerHTML = "No checkmate.";
+
+			poteza = JSON.parse(data).poteza;
+			
 			if(JSON.parse(data).stanje_igre == "e"){
-				var newLocation = "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=sah&action=endScreen&game_id="+game_id;
-				window.location = newLocation;
+				var newLocation = "http://164.8.230.124/sah/index.php?controller=sah&action=endScreen&game_id="+game_id;
+				clearInterval(id);
+				alert("Konec igre.");
 			}
+			
 			for(var x = 0; x < 8; x++){
 				var isBreak = false;
 				for(var y = 0; y < 8; y++){
 					if(!sah || sah[x][y] != changed[x][y]){ //pregleda ce sah polje obstaja in ali je kaksna sprememba
-						sah = changed;
-						poteza = JSON.parse(data).poteza;
-						if(JSON.parse(data).check == 1) 
-							document.getElementById("check").innerHTML = "Check!";
-						else
-							document.getElementById("check").innerHTML = "No check.";
-						if(poteza == "w")
-							document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
-						else
-							document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
-						
+						sah = changed;						
 						generatePolje();
 						isBreak = true;
 						break;
@@ -128,84 +138,6 @@ function getBoard(){
 		}
 	})
 }
-function generatePolje(){	
-	var sahovnica = "";
-	var figureName = "";
-	var figureChar = "";
-	for(x = 0; x < 8; x++){ //row
-	sahovnica += "<tr>";
-		for(y = 0; y < 8; y++){ //col
-			var total=x+y;
-			figureChar = sah[x][y];
-			figureName = sah[x][y];
-			switch(figureName){
-				case "r": figureName="W_R"; break;
-				case "n": figureName="W_N"; break;
-				case "b": figureName="W_B"; break;
-				case "q": figureName="W_Q"; break;
-				case "k": figureName="W_K"; break;
-				case "p": figureName="W_P"; break;
-				case "R": figureName="B_R"; break;
-				case "N": figureName="B_N"; break;
-				case "B": figureName="B_B"; break;
-				case "Q": figureName="B_Q"; break;
-				case "K": figureName="B_K"; break;
-				case "P": figureName="B_P"; break;
-				case "0": figureName=""; break;
-			}
-			if(player_turn == "w"){
-				//To je za rotacijo
-				$("#sahovnica").removeClass("b");
-				$("#sahovnica").addClass("w");
-				if(total%2==0)  
-				{  
-					if(figureName != ""){
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-					}
-					else {
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
-					}
-				}  
-				else  
-				{
-					if(figureName != ""){
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-					}
-					else{
-						sahovnica += "<td class=\""+player_turn+"\" id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
-					}
-				} 
-			}
-			else{
-				$("#sahovnica").removeClass("w");
-				$("#sahovnica").addClass("b");
-				if(total%2==0)  
-				{  
-					if(figureName != ""){
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" bgcolor=#FFFFFF> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-					}
-					else {
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#FFFFFF> </td>";   
-					}
-				}  
-				else  
-				{
-					if(figureName != ""){
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3> <img height=50px width=50px src=\"images/Chess_Figures/"+figureName+".png\" id=\"chess_board_images\"></td>"; 
-					}
-					else{
-						sahovnica += "<td  id=\""+x+y+figureChar+"\" height=50px width=50px bgcolor=#D3D3D3></td>"; 
-					}
-				} 
-			}
-			 
-		}	
-	sahovnica += "</tr>";
-	}
-	document.getElementById("sahovnica").innerHTML = sahovnica;
-	
-}
-
 </script>
 
 <table class="sahovnica" id="sahovnica"> 
@@ -215,6 +147,9 @@ function generatePolje(){
 	
 </div>
 <div id="poteza" class="poteza">
+	
+</div>
+<div id="mate" class="mate">
 	
 </div>
 

@@ -121,4 +121,17 @@ function vrniAktivneIgre(){
 		}
 	})
 }
-//text += "<div class=\"panel-body\">"+izzivi[i].username+" "+" <button type=\"button\" id=\""+izzivi[i].id+"\" class=\"btn btn-primary btn-xs glyphicon accept\">Accept</button> <button type=\"button\" id=\""+izzivi[i].id+"\" class=\"btn btn-primary btn-xs glyphicon reject\">Reject</button></div>";
+function deleteGame(id){
+	$.ajax({
+		type: "POST",
+		url: "http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=api&action=deleteGame",
+		data: {"id":id},
+		success:function(data){
+			var id = JSON.parse(data);
+			$("#game_"+id).hide();
+		},
+		error:function(error){
+			console.log(error);
+		}
+	})
+}

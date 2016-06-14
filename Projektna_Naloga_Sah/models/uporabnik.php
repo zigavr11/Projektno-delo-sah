@@ -36,6 +36,14 @@
 			return new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 		}
 		
+		public static function odjaviUporabnika(){
+			$db = Db::getInstance();
+			$sql="UPDATE uporabnik SET prijava = -1 WHERE id = '".$_SESSION["id"]."'";
+			mysqli_query($db, $sql);
+			session_destroy();
+			require_once("views/registracija/uspesnaOdjava.php");
+		}
+		
 		public static function dodajUporabnika($username, $passwordH, $ime, $priimek) {
 			$password = hash("sha256", $passwordH);
 			$db = Db::getInstance();
@@ -47,7 +55,6 @@
 		}
 		
 		public static function prijaviUporabnika($username, $password){
-			echo "test1";
 			$password=hash("sha256", $_POST["password"]);
 			$db = Db::getInstance();
 			$sql = "SELECT * FROM uporabnik WHERE uporabnisko_ime=\"$username\" AND geslo=\"$password\"";
@@ -58,6 +65,7 @@
 				$_SESSION["id"] = $row["id"];
 				$sql="UPDATE uporabnik SET prijava = 1 WHERE id = '".$row["id"]."'";
 				mysqli_query($db, $sql);
+				require_once("views/registracija/prijavaUspesna.php");
 			}
 			else
 			{
@@ -82,8 +90,12 @@
   
 		public static function izzoviPrijatelja($id_prijatelja){
 			$db = Db::getInstance();
-			$sql = "INSERT INTO izziv(id_uporabnika, id_prijatelja, stanje) VALUES (\"".$_SESSION["id"]."\", \"".$id_prijatelja."\", \"w\")";
-			mysqli_query($db, $sql);
+			$sql = "SELECT * FROM izziv WHERE (id_uporabnika = ".$_SESSION["id"]." || id_uporabnika = ".$id_prijatelja.") AND (id_prijatelja = ".$id_prijatelja." || id_prijatelja = ".$_SESSION["id"].")";
+			$result = mysqli_query($db, $sql);
+			if(mysqli_num_rows($result) == 0){
+				$sql = "INSERT INTO izziv(id_uporabnika, id_prijatelja, stanje) VALUES (\"".$_SESSION["id"]."\", \"".$id_prijatelja."\", \"w\")";
+				mysqli_query($db, $sql);
+			}
 		}
 		
 		public static function vrniIzzive(){
@@ -92,7 +104,7 @@
 			$result = mysqli_query($db,"SELECT * FROM izziv, uporabnik WHERE id_uporabnika = uporabnik.id AND id_prijatelja = \"".$_SESSION["id"]."\"");
 		
 			while($row = mysqli_fetch_assoc($result)){
-				 $list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
+				$list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 			}
 			return $list;
 		}

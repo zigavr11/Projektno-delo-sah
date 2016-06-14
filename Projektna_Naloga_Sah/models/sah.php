@@ -1,11 +1,17 @@
 <?php
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);*/
+require 'src/Rating/Rating.php';
+require_once "fenScanner.php";
 class Sah {
 	public $polje;
 	public $poteza;
 	public $check;
 	public $friendly_check;
 	public $stanje_igre;
-	
+	public $check_mate;
 	public function __construct($polje) {
 		$this->polje = $polje;
 	}
@@ -101,32 +107,28 @@ class Sah {
 	return $table;
  }
 	
-	/*public static function newGameVsAi(){
-		$_SESSION["barva"] = "w";
-		$_SESSION["id"];
-		$db = Db::getInstance();
-		$tezavnost = "easy";
-		if($tezavnost == "hard"){
-			$uporabnik2 = -3;
-		}
-		else if($tezavnost == "medium"){
-			$uporabnik2 = -2;
+	public static function newGameVsAi(){
+		if(!isset($_SESSION["ai_inGame"]) || $_SESSION["ai_inGame"] < 0){
+			
+			$db = Db::getInstance();
+			$uporabnik2 = -1;
+			$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali ne
+			
+			mysqli_query($db , $sql);
+			$id = mysqli_insert_id($db);
+			$_SESSION["ai_inGame"] = $id;
+			$fen_string = Sah::toFEN(Sah::generateNewBoard());
+			
+			$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
+			mysqli_query($db,$sql);
+			
+			$polje = Sah::toTable($fen_string);
+			return $id;
 		}
 		else{
-			$uporabnik2 = -1;
+			return $_SESSION["ai_inGame"];
 		}
-		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
-		
-		mysqli_query($db , $sql);
-		$id = mysqli_insert_id($db);
-		$fen_string = Sah::toFEN(Sah::generateNewBoard());
-		
-		$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
-		mysqli_query($db,$sql);
-		
-		$polje = Sah::toTable($fen_string);
-		return new Sah($polje);
-	}*/
+	}
 	
 	public static function newGameVsFriend($friend_id){
 		$_SESSION["barva"] = "w";
@@ -146,7 +148,20 @@ class Sah {
 	}
 	
 	public static function newGameVsOpponent(){
-	
+		$_SESSION["barva"] = "w";
+		$_SESSION["id"];
+		$db = Db::getInstance();
+		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", 7, 0, \"f\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
+		
+		mysqli_query($db , $sql);
+		$id = mysqli_insert_id($db);
+		$fen_string = Sah::toFEN(Sah::generateNewBoard());
+		
+		$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
+		mysqli_query($db,$sql);
+		
+		$polje = Sah::toTable($fen_string);
+		return $id;
 	}
 	
 	public static function endGame($game_id, $forfeit){
@@ -161,11 +176,19 @@ class Sah {
 			}
 			$sql = "UPDATE igra SET zmagovalec = $zmagovalec , stanje = \"e\" WHERE id=$game_id";
 			mysqli_query($db, $sql);
+			unset($_SESSION["ai_inGame"]);
+			$rating = new Rating( $row["tk_uporabnik1"],  $row["tk_uporabnik2"], 1, 0);
 		}
 		else{
+			$sql = "SELECT * FROM igra WHERE id=$game_id";
+			$result = mysqli_query($db, $sql);
+			$row = mysqli_fetch_assoc($result);
 			$sql = "UPDATE igra SET zmagovalec = ".$_SESSION["id"]." , stanje = \"e\" WHERE id=$game_id";
 			mysqli_query($db, $sql);
+			unset($_SESSION["ai_inGame"]);
+			$rating = new Rating( $row["tk_uporabnik1"],  $row["tk_uporabnik2"], 0, 1);
 		}
+		
 	}
 	
 	public static function returnGameState($game_id){
@@ -178,6 +201,7 @@ class Sah {
 		$sahObj = new Sah($polje);
 		$sahObj->poteza = $row["poteza"];
 		$sahObj->check = $row["sah"];
+		$sahObj->check_mate = $row["sah_mat"];
 		$sahObj->stanje_igre = $row["stanje_igre"];
 		return $sahObj;
 	}
@@ -192,6 +216,26 @@ class Sah {
 			$list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'],"","");
 		}
 		return $list;
+	}
+	
+	public static function undo($game_id){
+		$db = Db::getInstance();
+		$sql = "SELECT id FROM stanja WHERE tk_igra = $game_id ORDER BY id desc LIMIT 2";
+		$result = mysqli_query($db , $sql);
+		if(mysqli_num_rows($result) == 2){
+			while($row = mysqli_fetch_assoc($result)){
+				$sql = "DELETE FROM stanja WHERE id = ".$row["id"]."";
+				mysqli_query($db , $sql);
+			}
+		}
+		
+	}
+	
+	public static function deleteGame($id){
+		$db = Db::getInstance();
+		$sql = "DELETE FROM igra WHERE igra.id = \"$id\"";
+		mysqli_query($db , $sql);
+		echo $id;
 	}
 	
 	public static function Rook($polje, $row1, $col1, $row2, $col2, $side, $figure){
@@ -323,6 +367,7 @@ class Sah {
 	}
 	
 	public static function updatePolje($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
+		$check = false;
 		if(ctype_lower($figure)){
 			$side = 1;
 		}
@@ -520,28 +565,57 @@ class Sah {
 		}
 		
 		if($updateDB){
-			$move = false;
 			$c = 0;
+			$mate = 0;
 			$fen_string = Sah::generate2DBoard($polje);
-			if($poteza == "w")
-				$poteza = "b";
-			else
-				$poteza = "w";
-			if($check){
-				$c = 1;
+			$members = array();
+			$members[] = trim($fen_string);
+	
+			$scanner = new Scanner($members);
+			if($scanner->isCorrect()){
+				if($poteza == "w")
+					$poteza = "b";
+				else
+					$poteza = "w";
+				if($check){
+					if(Sah::checkForCheckMate($polje, $k_Row, $k_Col, $row2, $col2, $side, $figure)){
+						//Sah::endGame($game_id, -1);
+						$mate = 1;
+					}
+					$c = 1;
+				}
+				$sql = "INSERT INTO stanja(stanje, poteza, sah, sah_mat, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c , $mate, $game_id)";
+				mysqli_query($db,$sql);
+				
+				return true;
 			}
-			$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
-			mysqli_query($db,$sql);
+			else{
+				echo "Fen string is wrong.";
+			}
 			
-			return true;
+			
 		}
 		else{
 			return false;
 		}
 	}
+	public static function updatePoljeHardMove($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
+		$c = 0;
+		$mate = 0;
+		$db = Db::getInstance();
+		$polje[$row1][$col1] = "0";
+		$polje[$row2][$col2] = $figure;
+		$fen_string = Sah::generate2DBoard($polje);
+		if($poteza == "w")
+			$poteza = "b";
+		else
+			$poteza = "w";
+		$sql = "INSERT INTO stanja(stanje, poteza, sah, sah_mat, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c , $mate, $game_id)";
+		mysqli_query($db,$sql);
+		
+	}
 	
 	public static function preglejDiagonalo1($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
 		$move = false;
 		$min = min($row1, $col1);
 		$tempRow = $row1;
@@ -907,10 +981,7 @@ class Sah {
 		return false;
 	}
 	public static function sahPawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		if($side == 1)
-			$side = -1;
-		else
-			$side = 1;
+		
 
 		if($side == -1){ //Crni
 			if($row1-1 == $row2 && $col1 == $col2 && $polje[$row2][$col2] == '0'){
@@ -969,6 +1040,8 @@ class Sah {
 			return true;
 		}
 	}
+	
+	
 	public static function checkForCheck($polje, $side, $figure){
 		$check = false;
 		$pos = Sah::getFriendlyKingPosition($side, $polje);
@@ -1066,9 +1139,7 @@ class Sah {
 		}
 		return $pos;
 	}
-	
 	public static function getFriendlyKingPosition($side, $polje){
-		
 		$pos = "";
 		for($x = 0; $x < 8; $x++){
 			for($y = 0; $y < 8; $y++){
@@ -1085,6 +1156,221 @@ class Sah {
 			}
 		}
 		return $pos;
+	}
+	
+	//CheckMate stuff
+	public static function checkFriendlyMoves($polje, $row1, $col1, $row2, $col2, $side, $figure){
+		//echo "bla";
+		if($row2 < 0 || $col2 < 0 || $row2 > 7 || $col2 > 7){
+			return false;
+		}
+		else{
+			if($polje[[$row2][$col2]] == '0'){
+				$temp = $polje[[$row1][$col1]];
+				$polje[[$row1][$col1]] = "0";
+				$polje[$row2 * 8 + $col2] = $temp;
+				if(Sah::checkForCheck($polje, $side, $figure)){
+					return false;
+				}
+				else
+					return true;
+			}
+			else
+				return false;
+		}
+	}
+	
+	public static function checkForCheckMate($polje1, $row1, $col1, $row2, $col2, $side, $figure){ //Row3 in col2 je pozicija figure ki napada kralja
+		//Pregleda ce se lahko kralj premakne na katerokoli polje okrog sebe, ce se lahko moramo pregledati ce je na tisti poziciji sah ce ni pomeni da ni sah mat
+		$side = $side * (-1);
+		$x = 0;
+		$y = 0;
+		$sahMat = true;
+		if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1-1, $side, $figure)){ //Ce se poteza lahko izvede vrne true
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1-1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1, $col1-1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1-1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1, $side, $figure)){
+			$sahMat = false;
+		}
+		else if(Sah::checkFriendlyMoves($polje1, $row1, $col1, $row1+1, $col1+1, $side, $figure)){
+			$sahMat = false;
+		}
+		
+		if($row2 - $row1 == 0){ //Vrsta
+			if($col2 - $col1 < 0){
+				//row++
+				$x = 0;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row--
+				$x = 0;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else if($col2 - $col1 == 0){ //Stolpec
+			if($row2 - $row1 < 0){
+				//col++
+				$x = 1;
+				$y = 0;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//col--
+				$x = -1;
+				$y = 0;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else if(($col2 - $col1) < 0 && ($row2 - $row1) < 0 || ($col2 - $col1) > 0 && ($row2 - $row1) > 0){
+			if(($col2 - $col1) < 0){
+				//row1++
+				//col1++
+				$x = 1;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row1--
+				//col1--
+				$x = -1;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		else{
+			if(($col2 - $col1) < 0){
+				//row1--
+				//col1++
+				$x = -1;
+				$y = 1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+			else{
+				//row1++
+				//col1--
+				$x = 1;
+				$y = -1;
+				if(Sah::checkAllPosibleMoves($polje1, $row1, $col1, $row2, $col2, $x, $y, $side)){
+					$sahMat = false;
+				}
+			}
+		}
+		return $sahMat;
+	}
+	
+	public static function checkAllPosibleMoves($polje, $row1, $col1, $row2, $col2, $DELIX, $DELIY, $side){
+		$mate = false;
+		$side = $side * (-1);
+		
+		while(true){
+			if($row2 == $row1 && $col2 == $col1){
+				break;
+			}
+			if($side == -1){
+				for($x = 0; $x < 8; $x++){
+					for($y = 0; $y < 8; $y++){	
+						$figure = $polje[$x][$y];
+						switch($polje[$x][$y]){
+							//White player
+							case "r":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "b":
+								if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "q":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){  $mate = true; }
+								else if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "n":
+								if(Sah::sahKnight($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "p":
+								if(Sah::sahPawn($polje, $x, $y, $row2, $col2, $side, $figure)) { $mate = true; }
+							break;
+						}
+					}
+					if($mate){
+						break;
+					}
+				}
+			}
+			else{
+				for($x = 0; $x < 8; $x++){
+					for($y = 0; $y < 8; $y++){
+						$figure = $polje[$x][$y];
+						switch($polje[$x][$y]){
+							//Black player
+							case "R":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "B":
+								if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){$mate = true; }
+							break;
+							case "Q":
+								if(Sah::sahVrsta($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahStolpec($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag1($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+								else if(Sah::sahDiag2($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "N":
+								if(Sah::sahKnight($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+							case "P":
+								if(Sah::sahPawn($polje, $x, $y, $row2, $col2, $side, $figure)){ $mate = true; }
+							break;
+						}
+					}
+					if($mate){
+						break;
+					}
+				}
+			}
+			if($mate)
+				break;
+			
+			$row2 = $row2 + $DELIX;
+			$col2 = $col2 + $DELIY;
+		}
+		return $mate;
 	}
 	
   }

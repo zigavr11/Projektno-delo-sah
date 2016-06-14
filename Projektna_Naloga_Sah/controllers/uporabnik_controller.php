@@ -9,6 +9,10 @@
 		require_once('views/uporabnik/profile.php');
 	}
 	
+	public function zgodovina(){
+		require_once('views/uporabnik/replays.php');
+	}
+	
     public function prikazi() {
       if (!isset($_GET['id']))
         return call('strani', 'napaka');
@@ -28,7 +32,8 @@
 	}
 	
 	public function pravila(){
-		require_once('views/uporabnik/replays.php');
+		require_once('views/uporabnik/pravila.php');
+		//require_once('views/uporabnik/replays.php');
 	}
   }
 ?>

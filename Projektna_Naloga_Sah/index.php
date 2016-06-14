@@ -6,7 +6,7 @@
     $action     = $_GET['action'];
   } 
   else{
-	echo "bla";
+
     $controller = 'strani';
     $action     = 'domov';
   }
