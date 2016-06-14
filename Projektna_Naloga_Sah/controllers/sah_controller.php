@@ -8,7 +8,14 @@ require_once('views/sah/AlfaBeta.php');
 		
 		public function ai(){
 			$id = Sah::newGameVsAi();
+
 			require_once('views/sah/ai.php');
+		}
+		
+		public function tutorial(){
+			$id = Sah::newGameVsAi();
+
+			require_once('views/sah/tutorial.php');
 		}
 		
 		public function move(){
@@ -23,7 +30,7 @@ require_once('views/sah/AlfaBeta.php');
 					$polje = Sah::toTable($row["stanje"]);
 					
 					$moveB = moveA(($_POST["row1"].$_POST["col1"].$_POST["row2"].$_POST["col2"])." ", $_POST["polje"]);
-					$move1 = Sah::updatePoljeHardMove($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
+					Sah::updatePoljeHardMove($polje, $moveB[0], $moveB[1], $moveB[2], $moveB[3], $polje[$moveB[0]][$moveB[1]], $_POST["game_id"], "b");
 					
 					echo json_encode($move);
 				}
@@ -46,14 +53,15 @@ require_once('views/sah/AlfaBeta.php');
 			require_once('views/sah/opponent.php');
 		}
 		
+		public function undo(){
+			Sah::undo($_POST["game_id"]);
+		}
+		
 		public function vrniStanjeIgre(){
 			$Sah = Sah::returnGameState($_POST["game_id"]);
 			echo json_encode($Sah);
 		}
 		
-		public function deleteGame(){
-			Sah::deleteGame($_POST["id"]);
-		}
 		public function vrniAktivneIgre(){
 			$igre = Sah::returnActiveGames();
 			echo json_encode($igre);
@@ -74,7 +82,8 @@ require_once('views/sah/AlfaBeta.php');
 		}
 		
 		public static function endGame(){
-			Sah::endGame($_POST["game_id"], $_POST["forfeit"]); //post ni delal zakaj?
+			Sah::endGame($_POST["game_id"], $_POST["forfeit"]);
+			
 			SahController::endScreen();
 		}
 		

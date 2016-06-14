@@ -11,6 +11,8 @@ var poteza;
 var check;
 var kingPosition;
 var sah;
+
+var stevec = 0;
 var id;
 $(document).ready(function(){
 	
@@ -35,7 +37,7 @@ $(document).ready(function(){
 				console.log(Click);
 				var id = $(this).attr('id');
 				figure = id.charAt(2);
-				if(( player_turn == "w" && figure.toLowerCase() == figure ) || (player_turn == "b" && figure.toUpperCase() == figure) && figure != '0'){ //S tem if stavkom povem da lahko bel igralec premika samo bele figure(lowercase) crni igralec pa crne figure (uppercase)
+				if(( player_turn == "w" && figure.toLowerCase() == figure ) || (player_turn == "b" && figure.toUpperCase() == figure) && figure != '0'){
 					row1 = id.charAt(0);
 					col1 = id.charAt(1);
 					$(this).toggleClass("active1");
@@ -81,7 +83,7 @@ $(document).ready(function(){
 			}
 		}
 	});
-	setInterval(function(){
+	id = setInterval(function(){
 		getBoard();
 	}, 500);
 });
@@ -98,7 +100,6 @@ function getBoard(){
 				var newLocation = "http://164.8.230.124/sah/index.php?controller=sah&action=endScreen&game_id="+game_id;
 				clearInterval(id);
 				alert("Konec igre.");
-				//window.location = newLocation;
 			}
 			
 			poteza = JSON.parse(data).poteza;
@@ -111,10 +112,12 @@ function getBoard(){
 				document.getElementById("poteza").innerHTML = "Na potezi je beli igralec.";
 			else
 				document.getElementById("poteza").innerHTML = "Na potezi je crni igralec.";
-			if(mate)
+			if(mate){
 				document.getElementById("mate").innerHTML = "Check mate!";
-			else
+			}
+			else{
 				document.getElementById("mate").innerHTML = "No check mate.";
+			}			
 			for(var x = 0; x < 8; x++){
 				var isBreak = false;
 				for(var y = 0; y < 8; y++){
@@ -133,11 +136,26 @@ function getBoard(){
 		}
 	})
 }
+
+function Undo(){
+	$.ajax({
+		type: "POST",
+		url: "http://164.8.230.124/sah/index.php?controller=sah&action=undo",
+		data: {"game_id":game_id},
+		success:function(data){
+			getBoard();
+		},
+		error:function(error){
+			
+		}
+	})
+}
 </script>
 
 <table class="sahovnica" id="sahovnica"> 
 
 </table>
+<button onclick="Undo()" type="button"> Undo </button>
 <div id="check" class="check">
 	
 </div>

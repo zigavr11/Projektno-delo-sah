@@ -106,8 +106,8 @@ function previousMove(){
 			echo "<script> var list = ".json_encode($list_potez).";</script>";
 			echo "<button onclick=\"startReplay(list)\" type=\"button\"> Play replay </button>";
 			echo "<button onclick=\"stopReplay()\" type=\"button\"> Stop replay </button>";
-			echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
 			echo "<button onclick=\"previousMove()\" type=\"button\"> Previous move </button>";
+			echo "<button onclick=\"nextMove()\" type=\"button\"> Next move </button>";
 			
 		}
 		else{
@@ -221,7 +221,7 @@ function previousMove(){
 
 <?php
 	if(isset($_GET["game_id"])){
-		echo "<a style=\"margin-top:2px\" class=\"btn btn-default\" href = \"http://localhost/Projektno-delo-sah/Projektna_Naloga_Sah/index.php?controller=uporabnik&action=zgodovina\" > Back </a>";
+		echo "<a style=\"margin-top:2px\" class=\"btn btn-default\" href = \"http://164.8.230.124/sah/index.php?controller=uporabnik&action=zgodovina\" > Back </a>";
 		echo "<script> generatePolje(list[stevec]); </script>";
 	}
 	

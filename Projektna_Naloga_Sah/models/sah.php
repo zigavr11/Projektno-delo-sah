@@ -1,12 +1,17 @@
 <?php
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);*/
+require 'src/Rating/Rating.php';
+require_once "fenScanner.php";
 class Sah {
 	public $polje;
 	public $poteza;
 	public $check;
 	public $friendly_check;
 	public $stanje_igre;
-	public $kingPosition;
-	
+	public $check_mate;
 	public function __construct($polje) {
 		$this->polje = $polje;
 	}
@@ -103,19 +108,26 @@ class Sah {
  }
 	
 	public static function newGameVsAi(){
-		$db = Db::getInstance();
-		$uporabnik2 = -1;
-		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali ne
-		
-		mysqli_query($db , $sql);
-		$id = mysqli_insert_id($db);
-		$fen_string = Sah::toFEN(Sah::generateNewBoard());
-		
-		$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
-		mysqli_query($db,$sql);
-		
-		$polje = Sah::toTable($fen_string);
-		return $id;
+		if(!isset($_SESSION["ai_inGame"]) || $_SESSION["ai_inGame"] < 0){
+			
+			$db = Db::getInstance();
+			$uporabnik2 = -1;
+			$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", $uporabnik2, 0, \"a\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali ne
+			
+			mysqli_query($db , $sql);
+			$id = mysqli_insert_id($db);
+			$_SESSION["ai_inGame"] = $id;
+			$fen_string = Sah::toFEN(Sah::generateNewBoard());
+			
+			$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
+			mysqli_query($db,$sql);
+			
+			$polje = Sah::toTable($fen_string);
+			return $id;
+		}
+		else{
+			return $_SESSION["ai_inGame"];
+		}
 	}
 	
 	public static function newGameVsFriend($friend_id){
@@ -136,7 +148,20 @@ class Sah {
 	}
 	
 	public static function newGameVsOpponent(){
-	
+		$_SESSION["barva"] = "w";
+		$_SESSION["id"];
+		$db = Db::getInstance();
+		$sql = "INSERT INTO igra(tk_uporabnik1, tk_uporabnik2, zmagovalec, tip, stanje) VALUES(".$_SESSION["id"].", 7, 0, \"f\", \"l\")"; //stanje v tem primeru pomeni ali je igra koncana ali se igra
+		
+		mysqli_query($db , $sql);
+		$id = mysqli_insert_id($db);
+		$fen_string = Sah::toFEN(Sah::generateNewBoard());
+		
+		$sql = "INSERT INTO stanja(stanje, poteza, tk_igra) VALUES(\"$fen_string\", \"w\", $id)";
+		mysqli_query($db,$sql);
+		
+		$polje = Sah::toTable($fen_string);
+		return $id;
 	}
 	
 	public static function endGame($game_id, $forfeit){
@@ -151,11 +176,19 @@ class Sah {
 			}
 			$sql = "UPDATE igra SET zmagovalec = $zmagovalec , stanje = \"e\" WHERE id=$game_id";
 			mysqli_query($db, $sql);
+			unset($_SESSION["ai_inGame"]);
+			$rating = new Rating( $row["tk_uporabnik1"],  $row["tk_uporabnik2"], 1, 0);
 		}
 		else{
+			$sql = "SELECT * FROM igra WHERE id=$game_id";
+			$result = mysqli_query($db, $sql);
+			$row = mysqli_fetch_assoc($result);
 			$sql = "UPDATE igra SET zmagovalec = ".$_SESSION["id"]." , stanje = \"e\" WHERE id=$game_id";
 			mysqli_query($db, $sql);
+			unset($_SESSION["ai_inGame"]);
+			$rating = new Rating( $row["tk_uporabnik1"],  $row["tk_uporabnik2"], 0, 1);
 		}
+		
 	}
 	
 	public static function returnGameState($game_id){
@@ -168,6 +201,7 @@ class Sah {
 		$sahObj = new Sah($polje);
 		$sahObj->poteza = $row["poteza"];
 		$sahObj->check = $row["sah"];
+		$sahObj->check_mate = $row["sah_mat"];
 		$sahObj->stanje_igre = $row["stanje_igre"];
 		return $sahObj;
 	}
@@ -182,6 +216,19 @@ class Sah {
 			$list[] = new Uporabnik($row['id'], $row['uporabnisko_ime'],"","");
 		}
 		return $list;
+	}
+	
+	public static function undo($game_id){
+		$db = Db::getInstance();
+		$sql = "SELECT id FROM stanja WHERE tk_igra = $game_id ORDER BY id desc LIMIT 2";
+		$result = mysqli_query($db , $sql);
+		if(mysqli_num_rows($result) == 2){
+			while($row = mysqli_fetch_assoc($result)){
+				$sql = "DELETE FROM stanja WHERE id = ".$row["id"]."";
+				mysqli_query($db , $sql);
+			}
+		}
+		
 	}
 	
 	public static function deleteGame($id){
@@ -320,6 +367,7 @@ class Sah {
 	}
 	
 	public static function updatePolje($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
+		$check = false;
 		if(ctype_lower($figure)){
 			$side = 1;
 		}
@@ -517,23 +565,35 @@ class Sah {
 		}
 		
 		if($updateDB){
-			$move = false;
 			$c = 0;
+			$mate = 0;
 			$fen_string = Sah::generate2DBoard($polje);
-			if($poteza == "w")
-				$poteza = "b";
-			else
-				$poteza = "w";
-			if($check){
-				if(Sah::checkForCheckMate($polje, $k_Row, $k_Col, $row2, $col2, $side, $figure)){
-					Sah::endGame($game_id, -1);
+			$members = array();
+			$members[] = trim($fen_string);
+	
+			$scanner = new Scanner($members);
+			if($scanner->isCorrect()){
+				if($poteza == "w")
+					$poteza = "b";
+				else
+					$poteza = "w";
+				if($check){
+					if(Sah::checkForCheckMate($polje, $k_Row, $k_Col, $row2, $col2, $side, $figure)){
+						//Sah::endGame($game_id, -1);
+						$mate = 1;
+					}
+					$c = 1;
 				}
-				$c = 1;
+				$sql = "INSERT INTO stanja(stanje, poteza, sah, sah_mat, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c , $mate, $game_id)";
+				mysqli_query($db,$sql);
+				
+				return true;
 			}
-			$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
-			mysqli_query($db,$sql);
+			else{
+				echo "Fen string is wrong.";
+			}
 			
-			return true;
+			
 		}
 		else{
 			return false;
@@ -541,6 +601,7 @@ class Sah {
 	}
 	public static function updatePoljeHardMove($polje, $row1, $col1, $row2, $col2, $figure, $game_id, $poteza){
 		$c = 0;
+		$mate = 0;
 		$db = Db::getInstance();
 		$polje[$row1][$col1] = "0";
 		$polje[$row2][$col2] = $figure;
@@ -549,13 +610,12 @@ class Sah {
 			$poteza = "b";
 		else
 			$poteza = "w";
-		$sql = "INSERT INTO stanja(stanje, poteza, sah, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c ,$game_id)";
+		$sql = "INSERT INTO stanja(stanje, poteza, sah, sah_mat, tk_igra) VALUES(\"$fen_string\", \"$poteza\", $c , $mate, $game_id)";
 		mysqli_query($db,$sql);
 		
 	}
 	
 	public static function preglejDiagonalo1($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		//echo " [".$row1.",".$col1."] - [".$row2.",".$col2."]";
 		$move = false;
 		$min = min($row1, $col1);
 		$tempRow = $row1;
@@ -921,10 +981,7 @@ class Sah {
 		return false;
 	}
 	public static function sahPawn($polje, $row1, $col1, $row2, $col2, $side, $figure){
-		if($side == 1)
-			$side = -1;
-		else
-			$side = 1;
+		
 
 		if($side == -1){ //Crni
 			if($row1-1 == $row2 && $col1 == $col2 && $polje[$row2][$col2] == '0'){
@@ -1083,7 +1140,6 @@ class Sah {
 		return $pos;
 	}
 	public static function getFriendlyKingPosition($side, $polje){
-		echo json_encode($polje);
 		$pos = "";
 		for($x = 0; $x < 8; $x++){
 			for($y = 0; $y < 8; $y++){

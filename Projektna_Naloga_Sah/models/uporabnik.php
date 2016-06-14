@@ -36,6 +36,14 @@
 			return new Uporabnik($row['id'], $row['uporabnisko_ime'], $row['ime'], $row['priimek']);
 		}
 		
+		public static function odjaviUporabnika(){
+			$db = Db::getInstance();
+			$sql="UPDATE uporabnik SET prijava = -1 WHERE id = '".$_SESSION["id"]."'";
+			mysqli_query($db, $sql);
+			session_destroy();
+			require_once("views/registracija/uspesnaOdjava.php");
+		}
+		
 		public static function dodajUporabnika($username, $passwordH, $ime, $priimek) {
 			$password = hash("sha256", $passwordH);
 			$db = Db::getInstance();
@@ -47,7 +55,6 @@
 		}
 		
 		public static function prijaviUporabnika($username, $password){
-			echo "test1";
 			$password=hash("sha256", $_POST["password"]);
 			$db = Db::getInstance();
 			$sql = "SELECT * FROM uporabnik WHERE uporabnisko_ime=\"$username\" AND geslo=\"$password\"";
@@ -58,6 +65,7 @@
 				$_SESSION["id"] = $row["id"];
 				$sql="UPDATE uporabnik SET prijava = 1 WHERE id = '".$row["id"]."'";
 				mysqli_query($db, $sql);
+				require_once("views/registracija/prijavaUspesna.php");
 			}
 			else
 			{

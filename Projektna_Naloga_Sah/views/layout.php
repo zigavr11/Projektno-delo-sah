@@ -12,19 +12,10 @@
 		<script src="main.js"></script>
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script src="http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.js"
-		<link href="https://fonts.googleapis.com/css?family=Exo:400,500" rel="stylesheet" type="text/css">
 		type="text/javascript"></script>
 
 		<style type="text/css">
-			@import url("http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.css");
-
-			#feedControl {
-				margin-top : 10px;
-				margin-left: auto;
-				margin-right: auto;
-				font-size: 12px;
-				color: #9CADD0;
-			}
+			
 		</style>
 		<script type="text/javascript">
 			function load() {
@@ -46,11 +37,25 @@
 		</script>
 	</head>
 	<style>
+		@import url("http://www.google.com/uds/solutions/dynamicfeed/gfdynamicfeedcontrol.css");
+		@import url("http://fonts.googleapis.com/css?family=Roboto");
 		
+		#feedControl {
+			margin-top : 10px;
+			margin-left: auto;
+			margin-right: auto;
+			font-size: 12px;
+			color: #9CADD0;
+		}
+			
+		
+		body{
+			font-family: 'Roboto', sans-serif;
+			font-size:14px;
+		}
 		.navbar {
 			margin-bottom: 0;
 			border-radius: 0;
-
 		}
 		
 		mainnav{
@@ -86,8 +91,7 @@
 		.sidenav {
 			padding-top: 20px;
 			background-color: #f1f1f1;
-			height: 100%;
-			
+			min-height: 100%;
 		}
 
 		footer {
@@ -111,7 +115,33 @@
 			cursor: default;
 		}
 		
+		.btn-outlined {
+			border-radius: 0;
+			-webkit-transition: all 0.3s;
+			   -moz-transition: all 0.3s;
+					transition: all 0.3s;
+		}
 		
+		.btn-outlined.btn-info {
+			background: none;
+			border: 3px solid #222222;
+			color: black;
+			height:150px;
+			width:150px;
+		}
+		.btn-outlined.btn-info:hover,
+		.btn-outlined.btn-info:active {
+			color: #FFF;
+			background: #222222;
+			height:150px;
+			width:150px;
+		}
+		
+		.game{
+			float:left;
+			margin-left:5px;
+			margin-top:5px;
+		}
 	</style>
 	<body>
   
@@ -123,7 +153,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>                        
 				</button>
-				<a class="navbar-brand" >Projektno delo - Sah</a>
+				<a class="navbar-brand" >Projektno delo - Šah</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
@@ -152,7 +182,6 @@
 					?>
 					
 					<li <?php if($action=='pravila') echo "class=\"active\""?>><a href='?controller=uporabnik&action=pravila'><span class="glyphicon glyphicon-education"></span> Pravila</a></li>
-					<li <?php if($action=='zgodovina') echo "class=\"active\""?>><a href='?controller=uporabnik&action=zgodovina'><span class="glyphicon glyphicon-film"></span> Zgodovina iger</a></li>
 					<li <?php if($action=='index') echo "class=\"active\""?>><a href='?controller=sah&action=index'><span class="glyphicon glyphicon-play"></span> Igraj</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
@@ -189,8 +218,9 @@
 							$result = mysqli_query($db,"SELECT * FROM uporabnik, prijatelji WHERE uporabnik.id = id_prijatelja AND id_uporabnika = ".$_SESSION["id"]."");
 			
 							while($row = mysqli_fetch_assoc($result)){
+								
 								$sql = "SELECT * FROM izziv WHERE (id_uporabnika = ".$_SESSION["id"]." || id_uporabnika = ".$row["id"].") AND (id_prijatelja = ".$row["id"]." || id_prijatelja = ".$_SESSION["id"].")";
-								$res = mysqli_query($db, $sql);	
+								$res = mysqli_query($db, $sql);
 								if(mysqli_num_rows($res) == 0){
 									echo "<div class=\"panel-body well well-sm\">".$row["uporabnisko_ime"]."
 									<button type=\"button\" id=\"".$row["id"]."\" class=\"btn btn-primary btn-xs glyphicon glyphicon-play friend_play\"></button>
@@ -239,10 +269,26 @@
 				<div class="panel panel-default">
 				<div class="panel-heading">Najdi podobnega igralca</div>
 					<?php 
-						if(isset($_SESSION["username"])){
-							echo "<button type=\"button\" onclick='alert(\"Predlagan igralec: ziga\")'>Isci!</button>"; 
-						} else {
+						if(isset($_GET["action2"])){
+							$db = Db::getInstance();
+							$sql = "SELECT rating FROM uporabnik WHERE uporabnisko_ime='" . $_SESSION["username"] . "'";
+							$result = mysqli_query($db, $sql);
+							$row = mysqli_fetch_assoc($result);
+							//var_dump($row);
+
+							$sql2 = "SELECT ABS(rating - " . $row['rating'] . ") AS ocena, uporabnisko_ime AS username FROM uporabnik ORDER BY ocena";
+							$result2 = mysqli_query($db, $sql2);
+							$row2 = mysqli_fetch_assoc($result2);
+							//var_dump($row2);
+							//echo $row2['ocena'];
+							//echo $row2['username'];
+							echo 'Predlagani igralec na podlagi vasega ratinga je ' . $row2['username'] . '. Dodajte ga med prijatelje in z njim igrajte igro!';
+							
+						} else if(! isset($_SESSION["username"])) {
 							echo "Za iskanje nasprotnika se morate registrirate/vpisati";
+						}
+					 	else {
+							echo '<a href="?action2=something">Isci!</button>'; 
 						}
 					?>
 				</div>
